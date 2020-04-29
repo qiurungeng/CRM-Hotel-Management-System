@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+  <title></title>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div th:fragment="client_base_info">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div style="text-align: center;margin:0 auto">
+            <h1>客户基本信息维护</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <button type="button" class="btn btn-success" onclick="add_client_info()">
+                <i class="fa fa-plus-square" aria-hidden="true"></i>&nbsp;&nbsp;
+                添加
+              </button>
+              <button id="mmm" type="button" class="btn btn-primary" onclick="modify_client_info()">
+                <i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;
+                修改
+              </button>
+              <button type="button" class="btn btn-danger">
+                <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;
+                删除
+              </button>
+
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered dataTable dtr-inline">
+                <thead>
+                <tr>
+                  <th>客户档案号</th>
+                  <th>姓名</th>
+                  <th>性别</th>
+                  <th>出生日期</th>
+                  <th>职业</th>
+                  <th>籍贯</th>
+                  <th>地址</th>
+                  <th>电话号</th>
+                  <th>证件号</th>
+                  <th>附加信息</th>
+                  <th>客户喜好</th>
+                </tr>
+                </thead>
+                <tbody>
+
+<!--                <tr>-->
+<!--                  <td>20170001</td>-->
+<!--                  <td>张三</td>-->
+<!--                  <td>男</td>-->
+<!--                  <td>2017-01-01</td>-->
+<!--                  <td>学生</td>-->
+<!--                  <td>北京</td>-->
+<!--                  <td>西城区XX街17号</td>-->
+<!--                  <td>15888888888</td>-->
+<!--                  <td>444444444444444444</td>-->
+<!--                  <td>无</td>-->
+<!--                  <td>发呆</td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                  <td>20180001</td>-->
+<!--                  <td>李四</td>-->
+<!--                  <td>男</td>-->
+<!--                  <td>2017-01-01</td>-->
+<!--                  <td>学生</td>-->
+<!--                  <td>上海</td>-->
+<!--                  <td>西城区XX街17号</td>-->
+<!--                  <td>138222888888</td>-->
+<!--                  <td>444444444444444444</td>-->
+<!--                  <td>无</td>-->
+<!--                  <td>发呆</td>-->
+<!--                </tr>-->
+                <div th:if="${clientBaseInfos}!=null">
+                  <tr th:each="info,infoStat: ${clientBaseInfos}">
+                    <td th:text="${info.clientId}"></td>
+                    <td th:text="${info.name}"></td>
+                    <td th:text="${info.sex}==true?'男':'女'"></td>
+                    <td th:text="${info.birthday}"></td>
+                    <td th:text="${info.profession}"></td>
+                    <td th:text="${info.birthPlace}"></td>
+                    <td th:text="${info.address}"></td>
+                    <td th:text="${info.phoneNumber}"></td>
+                    <td th:text="${info.idCardNumber}"></td>
+                    <td th:text="${info.extras}"></td>
+                    <td th:text="${info.hobbies}"></td>
+                  </tr>
+                </div>
+                </tbody>
+
+
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable({
+      "responsive": true,
+      "autoWidth": false,
+      "ordering": true,
+      "info": true,
+    });
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+  $(document).ready(function () {
+    $("#example1>tbody>tr").on("click", function () {
+      $(this).parent().find("tr.focus").toggleClass("focus");//取消原先选中行
+      $(this).toggleClass("focus");//设定当前行为选中行
+    });
+  });
+</script>
+</body>
+</html>

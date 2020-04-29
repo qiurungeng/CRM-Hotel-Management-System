@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.crm.mapper.StatisticsInfoMapper">
+    <select id="getTotalClientAccommodationIncome" resultType="DOUBLE">
+        select client_accommodation_income from statistics_info where id=1;
+    </select>
+
+    <select id="getTotalClientConsumeIncome" resultType="DOUBLE">
+        select client_consume_income from statistics_info where id=1;
+    </select>
+</mapper>

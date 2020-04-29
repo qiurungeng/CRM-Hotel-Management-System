@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>东港江海文化大酒店-注册</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition register-page">
+<div class="register-box">
+  <div class="register-logo">
+    <a href="index2.html"><b>东港江海文化大酒店</b></a>
+  </div>
+
+  <div class="card">
+    <div class="card-body register-card-body">
+      <p class="login-box-msg">注册新账号</p>
+
+      <form action="/register" method="post" name="register_form">
+        <div class="input-group mb-3">
+          <input name="name" class="form-control" placeholder="真实姓名">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-id-card"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input name="username" class="form-control" placeholder="用户名">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" id="password" name="password" class="form-control" placeholder="密码">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" id="password_retry" class="form-control" placeholder="确认密码">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <input type="button" class="btn btn-primary btn-block" onclick="verify_password()" value="注册" />
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <hr>
+      <p class="mb-1" >
+        <a href="/login">返回登录页</a>
+      </p>
+    </div>
+    <!-- /.form-box -->
+  </div><!-- /.card -->
+</div>
+<!-- /.register-box -->
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<script>
+  function verify_password() {
+    if ($("#password").val()===$("#password_retry").val()){
+      alert("测试");
+      $.ajax({
+        type: "POST",
+        url:"/register",
+        data:$("form[name='register_form']").serialize(),
+        async: true,
+        error: function(request) {
+          alert("Connection error");
+        },
+        success: function(data) {
+          if(data){
+            alert("注册成功！");
+          }else {
+            alert("注册失败！该用户名已被注册，换一个试试？");
+          }
+        }
+      });
+    }else {
+      alert("两次密码输入不一致，请重试！");
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>酒店管理系统</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!--  我的css-->
+    <link rel="stylesheet" href="css/my.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- 导航布局：左侧导航及上方状态栏-->
+    <div th:include="navigator::navigator"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <!--  中间主页面-->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div style="text-align: center;margin:0 auto">
+                        <h1>客户住宿信息维护</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <button type="button" class="btn btn-success" onclick="add_client_info()">
+                                <i class="fa fa-plus-square" aria-hidden="true"></i>&nbsp;&nbsp;
+                                添加
+                            </button>
+                            <button id="mmm" type="button" class="btn btn-primary" onclick="modify_client_info()">
+                                <i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;
+                                修改
+                            </button>
+                            <button type="button" class="btn btn-danger">
+                                <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;
+                                删除
+                            </button>
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="example1" class="table table-bordered dataTable dtr-inline">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>客户档案号</th>
+                                    <th>客户姓名</th>
+                                    <th>房号</th>
+                                    <th>入住日期</th>
+                                    <th>入住时长(天)</th>
+                                    <th>交易状态</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr>
+                                    <td>999</td>
+                                    <td>20170001</td>
+                                    <td>张三(样例数据)</td>
+                                    <td>007</td>
+                                    <td>2017-01-01</td>
+                                    <td>2</td>
+                                    <td>已支付</td>
+                                </tr>
+                                <tr>
+                                    <td>999</td>
+                                    <td>20170002</td>
+                                    <td>李四(样例数据)</td>
+                                    <td>007</td>
+                                    <td>2017-01-01</td>
+                                    <td>2</td>
+                                    <td>已支付</td>
+                                </tr>
+
+                                <div th:if="${clientAccommodationDTOs}!=null">
+                                    <tr th:each="info,infoStat: ${clientAccommodationDTOs}">
+                                        <td th:text="${info.id}"></td>
+                                        <td th:text="${info.clientId}"></td>
+                                        <td th:text="${info.name}"></td>
+                                        <td th:text="${info.roomId}"></td>
+                                        <td th:text="${info.date}"></td>
+                                        <td th:text="${info.dayCount}"></td>
+                                        <td th:text="${info.state}?'已支付':'预订'"></td>
+                                    </tr>
+                                </div>
+
+                                </tbody>
+
+
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <!-- 底部页脚-->
+    <div th:include="footer::footer"></div>
+</div>
+<!-- ./wrapper -->
+
+<!--添加/修改，对话框/模态框-->
+
+<!-- Modal -->
+<div class="modal fade" id="clientModel" tabindex="-1" role="dialog" aria-labelledby="clientModelLabel">
+    <div class="modal-dialog" role="document" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="clientModelLabel">客户住宿信息</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" >
+                <!-- general form elements -->
+                <!-- form start -->
+                <form role="form" id="client_base_info_form">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="id">ID</label>
+                            <input type="text" class="form-control" id="id" name="id">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientId">客户档案号</label>
+                            <input type="text" class="form-control" id="clientId" name="clientId">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">客户姓名</label>
+                            <input type="text" class="form-control" id="name" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="roomId">房号</label>
+                            <input type="text" class="form-control" id="roomId" name="roomId">
+                        </div>
+                        <div class="form-group">
+                            <label for="date">入住日期</label>
+                            <input type="text" class="form-control" id="date" name="date">
+                        </div>
+                        <div class="form-group">
+                            <label for="dayCount">入住天数</label>
+                            <input type="text" class="form-control" id="dayCount" name="dayCount">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">交易类型</label>
+                            <select class="form-control" id="state" name="state">
+                                <option value="0">预订</option>
+                                <option value="1">已支付</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                </form>
+
+                <!--        设置模态框中表单的操作类型：0.添加  1.修改-->
+                <input type="hidden" id="operation"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="save_client_info()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--模态框弹出按钮，隐藏的按钮-->
+<button style="display: none" data-toggle="modal" data-target="#clientModel" id="client_model_pops_up"></button>
+<!--./添加/修改，对话框/模态框-->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script src="dist/js/pages/dashboard3.js"></script>
+<script>
+    $(function () {
+        $("#example1").DataTable({
+            "responsive": true,
+            "autoWidth": false,
+            "ordering": true,
+            "info": true
+        });
+        $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+
+    //选中表格中的行
+    $(document).ready(function () {
+        $("#example1>tbody>tr").on("click", function () {
+            $(this).parent().find("tr.focus").toggleClass("focus");//取消原先选中行
+            $(this).toggleClass("focus");//设定当前行为选中行
+        });
+    });
+
+    /**
+     * 模态框中显示待修改客户信息
+     */
+    function modify_client_info() {
+        //模态框中显示待修改客户信息
+        var ths = $("#example1>tbody").find("tr.focus").find("td"); //找出表格中被选中行的所有列
+        if (ths.length===0){
+            alert("请先选中一条客户基本信息记录");
+            return;
+        }
+        $("#name").parent().attr("style","");
+        $("#id").val(ths[0].innerText);
+        $("#clientId").val(ths[1].innerText);
+        $("#name").val(ths[2].innerText);
+        $("#roomId").val(ths[3].innerText);
+        $("#date").val(ths[4].innerText);
+        $("#dayCount").val(ths[5].innerText);
+        $("#state").val(ths[6].innerText=='预订'?'0':'1');
+        //模态框设置为修改模式
+        $("#operation").val(1);
+        //弹出模态框
+        $("#client_model_pops_up").click();
+    }
+
+    /**
+     * 添加客户信息的模态框
+     */
+    function add_client_info(){
+        $("#id").parent().attr("style","display:none");
+        $("#id").val("");
+        $("#clientId").val("");
+        $("#name").val("");
+        $("#name").parent().attr("style","display:none");
+        $("#roomId").val("");
+        $("#date").val("");
+        $("#dayCount").val("");
+        $("#state").val('0');
+        //模态框设置为添加模式
+        $("#operation").val(0);
+        //弹出模态框
+        $("#client_model_pops_up").click();
+    }
+
+    /**
+     * 保存模态框操作信息
+     */
+    function save_client_info() {
+        var operation=$("#operation").val();
+        var post_url;
+        if (operation==0){
+            post_url="/addClientAccommodation";
+        }else {
+            post_url="/modifyClientAccommodation";
+        }
+        var post_info=$('#client_base_info_form').serialize();
+
+
+        //提交表单
+        $.ajax({
+            type: "POST",
+            url: post_url,
+            data: post_info,
+            async: true,
+            error: function(request) {
+                alert("操作失败，请检查输入数据的格式");
+            },
+            success: function(data) {
+                alert(data);
+                //接收后台返回的结果
+                //
+                // if (data){
+                //     alert("成功");
+                //     var new_record='<tr>' +
+                //         '<td>'+data["clientId"]+'</td>' +
+                //         '<td>'+data["name"]+'</td>' +
+                //         '<td>'+data["sex"]+'</td>' +
+                //         '<td>'+data["birthday"]+'</td>' +
+                //         '<td>'+data["profession"]+'</td>' +
+                //         '<td>'+data["birthPlace"]+'</td>' +
+                //         '<td>'+data["address"]+'</td>' +
+                //         '<td>'+data["phoneNumber"]+'</td>' +
+                //         '<td>'+data["idCardNumber"]+'</td>' +
+                //         '<td>'+data["extras"]+'</td>' +
+                //         '<td>'+data["hobbies"]+'</td>' +
+                //         '</tr>';
+                //     $("#example1>tbody").append(new_record);
+                // }
+                //
+            }
+        });
+    }
+
+    /**
+     * Due to how HTML5 defines its semantics, the autofocus HTML attribute has no effect in Bootstrap modals.
+     * To achieve the same effect, use some custom JavaScript:
+     */
+    // $('#clientModel').on('shown.bs.modal', function () {
+    //   $('#myInput').focus()
+    // })
+</script>
+</body>
+
+</html>
