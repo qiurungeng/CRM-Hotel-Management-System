@@ -81,7 +81,10 @@
 
                                     <h3 class="profile-username text-center" th:text="${clientValuePageInfo.name}">张三</h3>
 
-                                    <p class="text-muted text-center" th:text="'档案号:'+${clientValuePageInfo.clientId}">?</p>
+                                    <p class="text-muted text-center">
+                                        档案号：
+                                        <span th:text="${clientValuePageInfo.clientId}" id="client_id_of_calculate_result"></span>
+                                    </p>
 
                                     <ul class="list-group list-group-unbordered mb-3">
                                         <li class="list-group-item">
@@ -322,23 +325,7 @@
 
     function search_client_value_page_info() {
         var clientId=$("#client_id").val();
-        // $.ajax({
-        //     type: "GET",
-        //     url: "/getClientValuePageInfo/"+clientId,
-        //     async: true,
-        //     error: function(request) {
-        //         alert("Connection error");
-        //     },
-        //     success: function (data) {
-        //         alert("OK");
-        //     }
-        // });
-
         window.location.href="/valueCalculating/"+clientId;
-
-        // $("#client_value_page").load("/getClientValuePageInfo?client_id="+clientId + " #client_value_page>*", "");
-
-        // $("#client_value_page").load("/getClientValuePageInfo?client_id="+clientId);
     }
     
     function calculate_client_value() {
@@ -353,7 +340,8 @@
             url: "/getClientValue?accommodationIncome="+accommodationIncome
                 +"&consumeIncome="+consumeIncome
                 +"&numberOfTrades="+numberOfTrades
-                +"&expectedNumberOfTrades="+expectedNumberOfTrades,
+                +"&expectedNumberOfTrades="+expectedNumberOfTrades
+                +"&clientId="+$("#client_id_of_calculate_result").text(),
             async: true,
             error: function(request) {
                 alert("Connection error");
@@ -363,76 +351,76 @@
                 $("#consumeIncomeRate").text(Math.round(data["consumeIncomeRate"]*1000)/1000);
                 $("#tradeSuccessRate").text(Math.round(data["tradeSuccessRate"]*1000)/1000);
                 $("#clientValue").text(Math.round(data["clientValue"]*1000)/1000);
-                draw_result_chart();
+
             }
         });
 
     }
 
 
-    function draw_result_chart () {
-
-        $('.knob').knob({
-            draw: function () {
-
-                // "tron" case
-                if (this.$.data('skin') == 'tron') {
-
-                    var a   = this.angle(this.cv)  // Angle
-                        ,
-                        sa  = this.startAngle          // Previous start angle
-                        ,
-                        sat = this.startAngle         // Start angle
-                        ,
-                        ea                            // Previous end angle
-                        ,
-                        eat = sat + a                 // End angle
-                        ,
-                        r   = true
-
-                    this.g.lineWidth = this.lineWidth
-
-                    this.o.cursor
-                    && (sat = eat - 0.3)
-                    && (eat = eat + 0.3)
-
-                    if (this.o.displayPrevious) {
-                        ea = this.startAngle + this.angle(this.value)
-                        this.o.cursor
-                        && (sa = ea - 0.3)
-                        && (ea = ea + 0.3)
-                        this.g.beginPath()
-                        this.g.strokeStyle = this.previousColor
-                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false)
-                        this.g.stroke()
-                    }
-
-                    this.g.beginPath()
-                    this.g.strokeStyle = r ? this.o.fgColor : this.fgColor
-                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false)
-                    this.g.stroke()
-
-                    this.g.lineWidth = 2
-                    this.g.beginPath()
-                    this.g.strokeStyle = this.o.fgColor
-                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false)
-                    this.g.stroke()
-
-                    return false
-                }
-            }
-        })
-        /* END JQUERY KNOB */
-
-        //INITIALIZE SPARKLINE CHARTS
-        $('.sparkline').each(function () {
-            var $this = $(this)
-            $this.sparkline('html', $this.data())
-        })
-
-    }
-
-    draw_result_chart();
+    // function draw_result_chart () {
+    //
+    //     $('.knob').knob({
+    //         draw: function () {
+    //
+    //             // "tron" case
+    //             if (this.$.data('skin') == 'tron') {
+    //
+    //                 var a   = this.angle(this.cv)  // Angle
+    //                     ,
+    //                     sa  = this.startAngle          // Previous start angle
+    //                     ,
+    //                     sat = this.startAngle         // Start angle
+    //                     ,
+    //                     ea                            // Previous end angle
+    //                     ,
+    //                     eat = sat + a                 // End angle
+    //                     ,
+    //                     r   = true
+    //
+    //                 this.g.lineWidth = this.lineWidth
+    //
+    //                 this.o.cursor
+    //                 && (sat = eat - 0.3)
+    //                 && (eat = eat + 0.3)
+    //
+    //                 if (this.o.displayPrevious) {
+    //                     ea = this.startAngle + this.angle(this.value)
+    //                     this.o.cursor
+    //                     && (sa = ea - 0.3)
+    //                     && (ea = ea + 0.3)
+    //                     this.g.beginPath()
+    //                     this.g.strokeStyle = this.previousColor
+    //                     this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false)
+    //                     this.g.stroke()
+    //                 }
+    //
+    //                 this.g.beginPath()
+    //                 this.g.strokeStyle = r ? this.o.fgColor : this.fgColor
+    //                 this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false)
+    //                 this.g.stroke()
+    //
+    //                 this.g.lineWidth = 2
+    //                 this.g.beginPath()
+    //                 this.g.strokeStyle = this.o.fgColor
+    //                 this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false)
+    //                 this.g.stroke()
+    //
+    //                 return false
+    //             }
+    //         }
+    //     })
+    //     /* END JQUERY KNOB */
+    //
+    //     //INITIALIZE SPARKLINE CHARTS
+    //     $('.sparkline').each(function () {
+    //         var $this = $(this)
+    //         $this.sparkline('html', $this.data())
+    //     })
+    //
+    // }
+    //
+    // draw_result_chart();
 
 </script>
 </body>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>酒店管理系统</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!--  我的css-->
+    <link rel="stylesheet" href="css/my.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- 导航布局：左侧导航及上方状态栏-->
+    <div th:include="navigator::navigator"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <!--  中间主页面-->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>客户分类</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/">首页</a></li>
+                            <li class="breadcrumb-item active">客户分类</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="card card-default">
+                    <div class="card-header">
+                        <h3 class="card-title">K-Means聚类</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span>数据源</span>
+                                            </div>
+                                        </div>
+                                        <select class="form-control">
+                                            <option selected="selected">2019</option>
+                                            <option>2018</option>
+                                            <option>2017</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span>K值选取</span>
+                                            </div>
+                                        </div>
+                                        <input class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary col-2 form-control">确定</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="checkboxPrimary1" checked>
+                                        <label for="checkboxPrimary1">
+                                            客户满意度
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="checkboxPrimary2" checked>
+                                        <label for="checkboxPrimary2">
+                                            客户价值
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="checkboxPrimary3" checked>
+                                        <label for="checkboxPrimary3">
+                                            客户年收入
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="checkboxPrimary4" checked>
+                                        <label for="checkboxPrimary4">
+                                            客户教育程度
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="checkboxPrimary5" checked>
+                                        <label for="checkboxPrimary5">
+                                            客户年龄
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <label for="result">挖掘结果：</label>
+                            <textarea class="col-12" style="height: 300px" id="result"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+
+    <div th:include="footer::footer"></div>
+</div>
+<!-- ./wrapper -->
+
+
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- jQuery Knob -->
+<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script src="dist/js/pages/dashboard3.js"></script>
+<script type="text/javascript" src="js/my.js"></script>
+<!-- Bootstrap Switch -->
+<script src="plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<script>
+    $(function () {
+        $("#example1").DataTable({
+            "responsive": true,
+            "autoWidth": false,
+            "ordering": true,
+            "info": true
+        });
+        $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+
+    //选中表格中的行
+    $(document).ready(function () {
+        $("#example1>tbody>tr").on("click", function () {
+            $(this).parent().find("tr.focus").toggleClass("focus");//取消原先选中行
+            $(this).toggleClass("focus");//设定当前行为选中行
+        });
+    });
+
+
+
+    /**
+     * 提交用户评价表单
+     */
+    function collect_client_satisfaction() {
+        var formObject = {};
+        var formArray =$("#client_satisfaction_form").serializeArray();
+        $.each(formArray,function(i,item){
+            formObject[item.name] = item.value;
+        });
+
+
+        //提交表单
+        $.ajax({
+            type: "POST",
+            url: "/calculateClientSatisfaction",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(formObject),
+            dataType: 'json',
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                $("#JDHJ").text(data["environment_aware"]);
+                $("#JDFW").text(data["service_aware"]);
+                $("#JDSS").text(data["facility_aware"]);
+                $("#JDYG").text(data["staff_aware"]);
+                $("#XFTY").text(data["shopping_aware"]);
+                $("#ZTPJ").text(data["weighted_total_score"]);
+
+                alert("OK");
+                alert(data["environment_aware"]);
+            }
+        });
+    }
+
+</script>
+</body>
+
+</html>

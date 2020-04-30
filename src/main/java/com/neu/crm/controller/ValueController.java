@@ -1,21 +1,25 @@
 package com.neu.crm.controller;
 
 import com.neu.crm.bean.ClientBaseInfo;
+import com.neu.crm.bean.ClientValue;
 import com.neu.crm.bean.TradeRecord;
 import com.neu.crm.dto.ClientValueDTO;
 import com.neu.crm.dto.ClientValuePageInfoDTO;
 import com.neu.crm.service.ClientBaseInfoService;
+import com.neu.crm.service.ClientValueService;
 import com.neu.crm.service.StatisticsInfoService;
 import com.neu.crm.service.TradeRecordService;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -27,6 +31,8 @@ public class ValueController {
     TradeRecordService tradeRecordService;
     @Autowired
     StatisticsInfoService statisticsInfoService;
+    @Autowired
+    ClientValueService clientValueService;
 
     @RequestMapping("valueCalculating")
     public String clientValuePage(ModelMap modelMap){
@@ -83,7 +89,8 @@ public class ValueController {
     public ClientValueDTO getClientValue(Double accommodationIncome,
                                          Double consumeIncome,
                                          Integer numberOfTrades,
-                                         Integer expectedNumberOfTrades){
+                                         Integer expectedNumberOfTrades,
+                                         Integer clientId){
         ClientValueDTO dto=new ClientValueDTO();
 
         int clientSum = clientBaseInfoService.getClientsSum();
@@ -101,7 +108,35 @@ public class ValueController {
         dto.setClientValue(0.35*dto.getAccommodationIncomeRate()
                 + 0.35*dto.getConsumeIncomeRate()
                 + 0.3*dto.getTradeSuccessRate());
+
+        //保存此次计算结果到数据库
+        ClientValue clientValue=new ClientValue();
+        BeanUtils.copyProperties(dto,clientValue);
+        clientValue.setClientId(clientId);
+        clientValue.setAccommodationIncome(accommodationIncome);
+        clientValue.setConsumeIncome(consumeIncome);
+        clientValue.setOrderTimes(expectedNumberOfTrades);
+        clientValue.setTradeTimes(numberOfTrades);
+        clientValueService.addOrUpdateClientValue(clientValue);
+
         return dto;
+    }
+
+    @GetMapping("valueAnalyse")
+    public String valueAnalyse(ModelMap modelMap){
+        List<ClientValueDTO> DTOs=new LinkedList<>();
+
+        List<ClientValue> clientValues = clientValueService.getClientValues();
+        for (ClientValue clientValue : clientValues) {
+            ClientBaseInfo clientInfo = clientBaseInfoService.getClientBaseInfoById(clientValue.getClientId());
+            ClientValueDTO dto=new ClientValueDTO();
+            BeanUtils.copyProperties(clientInfo,dto);
+            BeanUtils.copyProperties(clientValue,dto,"clientId");
+            DTOs.add(dto);
+        }
+
+        modelMap.put("clientValues",DTOs);
+        return "value_analyse";
     }
 
 }

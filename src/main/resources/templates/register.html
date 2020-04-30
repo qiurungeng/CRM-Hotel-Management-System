@@ -92,7 +92,6 @@
 <script>
   function verify_password() {
     if ($("#password").val()===$("#password_retry").val()){
-      alert("测试");
       $.ajax({
         type: "POST",
         url:"/register",
