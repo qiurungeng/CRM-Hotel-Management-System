@@ -51,7 +51,7 @@
                 <i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;
                 修改
               </button>
-              <button type="button" class="btn btn-danger">
+              <button type="button" class="btn btn-danger" onclick="delete_client_info()">
                 <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;
                 删除
               </button>
@@ -62,47 +62,24 @@
               <table id="example1" class="table table-bordered dataTable dtr-inline">
                 <thead>
                 <tr>
-                  <th>客户档案号</th>
+                  <th>档案号</th>
                   <th>姓名</th>
                   <th>性别</th>
-                  <th>出生日期</th>
+                  <th>生日</th>
                   <th>职业</th>
                   <th>籍贯</th>
                   <th>地址</th>
-                  <th>电话号</th>
+                  <th>电话</th>
                   <th>证件号</th>
+                  <th>证件类型</th>
                   <th>附加信息</th>
                   <th>客户喜好</th>
+                  <th>教育程度</th>
+                  <th>年收入</th>
                 </tr>
                 </thead>
                 <tbody>
 
-<!--                <tr>-->
-<!--                  <td>20170001</td>-->
-<!--                  <td>张三</td>-->
-<!--                  <td>男</td>-->
-<!--                  <td>2017-01-01</td>-->
-<!--                  <td>学生</td>-->
-<!--                  <td>北京</td>-->
-<!--                  <td>西城区XX街17号</td>-->
-<!--                  <td>15888888888</td>-->
-<!--                  <td>444444444444444444</td>-->
-<!--                  <td>无</td>-->
-<!--                  <td>发呆</td>-->
-<!--                </tr>-->
-<!--                <tr>-->
-<!--                  <td>20180001</td>-->
-<!--                  <td>李四</td>-->
-<!--                  <td>男</td>-->
-<!--                  <td>2017-01-01</td>-->
-<!--                  <td>学生</td>-->
-<!--                  <td>上海</td>-->
-<!--                  <td>西城区XX街17号</td>-->
-<!--                  <td>138222888888</td>-->
-<!--                  <td>444444444444444444</td>-->
-<!--                  <td>无</td>-->
-<!--                  <td>发呆</td>-->
-<!--                </tr>-->
                 <div th:if="${clientBaseInfos}!=null">
                   <tr th:each="info,infoStat: ${clientBaseInfos}">
                     <td th:text="${info.clientId}"></td>
@@ -114,8 +91,19 @@
                     <td th:text="${info.address}"></td>
                     <td th:text="${info.phoneNumber}"></td>
                     <td th:text="${info.idCardNumber}"></td>
+                    <td th:text="${info.idCardType}"></td>
                     <td th:text="${info.extras}"></td>
                     <td th:text="${info.hobbies}"></td>
+                    <div th:switch="${info.education}">
+                      <div th:each="educationName,educationNameStat:${educations}">
+                        <td th:case="${educationName.id}" th:text="${educationName.name}" th:value="${educationName.id}"></td>
+                      </div>
+                    </div>
+                    <div th:switch="${info.incomeType}">
+                      <div th:each="incomeType,incomeTypeStat:${incomeTypes}">
+                        <td th:case="${incomeType.id}" th:text="${incomeType.type}" th:value="${incomeType.id}"></td>
+                      </div>
+                    </div>
                   </tr>
                 </div>
                 </tbody>

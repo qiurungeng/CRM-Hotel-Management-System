@@ -12,4 +12,6 @@ public interface ClientAccommodationService {
     void updateClientAccommodationByClientId(ClientAccommodationInfo clientAccommodationInfo);
 
     List<ClientAccommodationInfo> getClientAccommodationInfosByClientId(int clientId);
+
+    void deleteClientAccommodationInfoByClientId(Integer clientId);
 }

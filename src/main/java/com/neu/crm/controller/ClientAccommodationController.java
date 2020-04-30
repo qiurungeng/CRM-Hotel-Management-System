@@ -61,4 +61,11 @@ public class ClientAccommodationController {
         clientAccommodationService.updateClientAccommodationByClientId(clientAccommodationInfo);
         return "成功";
     }
+
+    @PostMapping("deleteClientAccommodationInfo")
+    @ResponseBody
+    public String deleteClientAccommodationInfo(Integer clientId){
+        clientAccommodationService.deleteClientAccommodationInfoByClientId(clientId);
+        return "成功";
+    }
 }

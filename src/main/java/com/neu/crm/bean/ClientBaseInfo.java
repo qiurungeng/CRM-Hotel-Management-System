@@ -24,6 +24,9 @@ public class ClientBaseInfo {
     private String address;
     private Long phoneNumber;
     private String idCardNumber;
+    private String idCardType;
     private String extras;
     private String hobbies;
+    private Integer education;
+    private Integer incomeType;
 }

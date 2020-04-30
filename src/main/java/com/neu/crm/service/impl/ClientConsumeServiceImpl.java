@@ -38,4 +38,13 @@ public class ClientConsumeServiceImpl implements ClientConsumeService {
         clientConsumeInfo.setClientId(clientId);
         return clientConsumeInfoMapper.select(clientConsumeInfo);
     }
+
+    @Override
+    public void deleteClientConsumeInfoByClientId(Integer clientId) {
+        if (clientId!=null){
+            ClientConsumeInfo clientConsumeInfo=new ClientConsumeInfo();
+            clientConsumeInfo.setClientId(clientId);
+            clientConsumeInfoMapper.delete(clientConsumeInfo);
+        }
+    }
 }

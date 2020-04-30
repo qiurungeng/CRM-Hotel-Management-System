@@ -12,4 +12,8 @@ public interface ClientBaseInfoService {
     ClientBaseInfo getClientBaseInfoById(Integer clientId);
 
     int getClientsSum();
+
+    ClientBaseInfo updateClientBaseInfo(ClientBaseInfo clientBaseInfo);
+
+    ClientBaseInfo deleteClientBaseInfo(Integer clientId);
 }

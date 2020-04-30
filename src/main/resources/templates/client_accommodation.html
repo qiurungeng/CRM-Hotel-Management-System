@@ -53,7 +53,7 @@
                                 <i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;
                                 修改
                             </button>
-                            <button type="button" class="btn btn-danger">
+                            <button type="button" class="btn btn-danger" onclick="delete_client_accommodation()">
                                 <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;
                                 删除
                             </button>
@@ -185,7 +185,7 @@
                 <input type="hidden" id="operation"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="close_model">关闭</button>
                 <button type="button" class="btn btn-primary" onclick="save_client_info()">保存</button>
             </div>
         </div>
@@ -296,7 +296,6 @@
         }
         var post_info=$('#client_base_info_form').serialize();
 
-
         //提交表单
         $.ajax({
             type: "POST",
@@ -307,38 +306,37 @@
                 alert("操作失败，请检查输入数据的格式");
             },
             success: function(data) {
-                alert(data);
-                //接收后台返回的结果
-                //
-                // if (data){
-                //     alert("成功");
-                //     var new_record='<tr>' +
-                //         '<td>'+data["clientId"]+'</td>' +
-                //         '<td>'+data["name"]+'</td>' +
-                //         '<td>'+data["sex"]+'</td>' +
-                //         '<td>'+data["birthday"]+'</td>' +
-                //         '<td>'+data["profession"]+'</td>' +
-                //         '<td>'+data["birthPlace"]+'</td>' +
-                //         '<td>'+data["address"]+'</td>' +
-                //         '<td>'+data["phoneNumber"]+'</td>' +
-                //         '<td>'+data["idCardNumber"]+'</td>' +
-                //         '<td>'+data["extras"]+'</td>' +
-                //         '<td>'+data["hobbies"]+'</td>' +
-                //         '</tr>';
-                //     $("#example1>tbody").append(new_record);
-                // }
-                //
+                alert("成功");
+                $("#close_model").click();
+                location.reload();
             }
         });
     }
 
-    /**
-     * Due to how HTML5 defines its semantics, the autofocus HTML attribute has no effect in Bootstrap modals.
-     * To achieve the same effect, use some custom JavaScript:
-     */
-    // $('#clientModel').on('shown.bs.modal', function () {
-    //   $('#myInput').focus()
-    // })
+    function delete_client_info() {
+        var ths = $("#example1>tbody").find("tr.focus").find("td"); //找出表格中被选中行的所有列
+        if (ths.length===0){
+            alert("请先选中一条客户基本信息记录");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/deleteClientAccommodationInfo",
+            data: {"clientId": ths[0].innerText},
+            async: true,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                //接收后台返回的结果
+                if (data){
+                    alert("成功");
+                    $("#close_model").click();
+                    location.reload();
+                }
+            }
+        });
+    }
 </script>
 </body>
 

@@ -106,12 +106,32 @@ to get the desired effect
                 <input type="text" class="form-control" id="idCardNumber" name="idCardNumber">
               </div>
               <div class="form-group">
+                <label for="idCardType">证件类型</label>
+                <input type="text" class="form-control" id="idCardType" name="idCardType">
+              </div>
+              <div class="form-group">
                 <label for="extras">附加信息</label>
                 <input type="text" class="form-control" id="extras" name="extras">
               </div>
               <div class="form-group">
                 <label for="hobbies">客户喜好</label>
                 <input type="text" class="form-control" id="hobbies" name="hobbies">
+              </div>
+              <div class="form-group">
+                <label for="education">教育程度</label>
+                <select class="form-control" id="education" name="education">
+                  <div  th:each="info,infoStat: ${educations}">
+                    <option th:text="${info.name}" th:value="${info.id}"></option>
+                  </div>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="education">收入类型</label>
+                <select class="form-control" id="incomeType" name="incomeType">
+                  <div  th:each="info,infoStat: ${incomeTypes}">
+                    <option th:text="${info.type}" th:value="${info.id}"></option>
+                  </div>
+                </select>
               </div>
 
             </div>
@@ -122,7 +142,7 @@ to get the desired effect
           <input type="hidden" id="operation"/>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="close_model">关闭</button>
         <button type="button" class="btn btn-primary" onclick="save_client_info()">保存</button>
       </div>
     </div>
@@ -196,8 +216,12 @@ to get the desired effect
     $("#address").val(ths[6].innerText);
     $("#phoneNumber").val(ths[7].innerText);
     $("#idCardNumber").val(ths[8].innerText);
-    $("#extras").val(ths[9].innerText);
-    $("#hobbies").val(ths[10].innerText);
+    $("#idCardType").val(ths[9].innerText);
+    $("#extras").val(ths[10].innerText);
+    $("#hobbies").val(ths[11].innerText);
+    $("#education").val(ths[12].getAttribute("value"));
+    $("#incomeType").val(ths[13].getAttribute("value"));
+
     //模态框设置为修改模式
     $("#operation").val(1);
     //弹出模态框
@@ -218,8 +242,11 @@ to get the desired effect
     $("#address").val("");
     $("#phoneNumber").val("");
     $("#idCardNumber").val("");
+    $("#idCardType").val("");
     $("#extras").val("");
     $("#hobbies").val("");
+    $("#education").val("1");
+    $("#incomeType").val("1");
     //模态框设置为添加模式
     $("#operation").val(0);
     //弹出模态框
@@ -253,32 +280,39 @@ to get the desired effect
         //接收后台返回的结果
         if (data){
           alert("成功");
-          var new_record='<tr>' +
-                  '<td>'+data["clientId"]+'</td>' +
-                  '<td>'+data["name"]+'</td>' +
-                  '<td>'+data["sex"]+'</td>' +
-                  '<td>'+data["birthday"]+'</td>' +
-                  '<td>'+data["profession"]+'</td>' +
-                  '<td>'+data["birthPlace"]+'</td>' +
-                  '<td>'+data["address"]+'</td>' +
-                  '<td>'+data["phoneNumber"]+'</td>' +
-                  '<td>'+data["idCardNumber"]+'</td>' +
-                  '<td>'+data["extras"]+'</td>' +
-                  '<td>'+data["hobbies"]+'</td>' +
-                  '</tr>';
-          $("#example1>tbody").append(new_record);
+          $("#close_model").click();
+          location.reload();
         }
       }
     });
   }
 
-  /**
-   * Due to how HTML5 defines its semantics, the autofocus HTML attribute has no effect in Bootstrap modals.
-   * To achieve the same effect, use some custom JavaScript:
-   */
-  // $('#clientModel').on('shown.bs.modal', function () {
-  //   $('#myInput').focus()
-  // })
+
+  function delete_client_info() {
+    var ths = $("#example1>tbody").find("tr.focus").find("td"); //找出表格中被选中行的所有列
+    if (ths.length===0){
+      alert("请先选中一条客户基本信息记录");
+      return;
+    }
+    $.ajax({
+      type: "POST",
+      url: "/deleteClientBaseInfo",
+      data: {"clientId": ths[0].innerText},
+      async: true,
+      error: function(request) {
+        alert("Connection error");
+      },
+      success: function(data) {
+        //接收后台返回的结果
+        if (data){
+          alert("成功");
+          $("#close_model").click();
+          location.reload();
+        }
+      }
+    });
+  }
+
 </script>
 </body>
 </html>

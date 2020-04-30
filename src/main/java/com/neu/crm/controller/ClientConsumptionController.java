@@ -82,4 +82,12 @@ public class ClientConsumptionController {
 
         return "成功";
     }
+
+    @PostMapping("deleteClientConsumeInfo")
+    @ResponseBody
+    public String deleteClientConsumeInfo(Integer clientId){
+        clientConsumeService.deleteClientConsumeInfoByClientId(clientId);
+        return "成功";
+    }
+
 }

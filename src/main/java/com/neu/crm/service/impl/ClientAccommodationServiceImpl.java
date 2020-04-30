@@ -36,4 +36,13 @@ public class ClientAccommodationServiceImpl implements ClientAccommodationServic
         return clientAccommodationInfoMapper.selectByExample(example);
     }
 
+    @Override
+    public void deleteClientAccommodationInfoByClientId(Integer clientId) {
+        if (clientId!=null){
+            Example example=new Example(ClientAccommodationInfo.class);
+            example.createCriteria().andEqualTo("clientId",clientId);
+            clientAccommodationInfoMapper.deleteByExample(example);
+        }
+    }
+
 }

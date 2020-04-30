@@ -60,18 +60,20 @@ public class ValueController {
             if (clientTradeRecord.getState())numberOfTrades++;
         }
 
-        dto.setName(clientBaseInfo.getName());
-        dto.setClientId(client_id);
-        dto.setSex(clientBaseInfo.getSex());
-        dto.setAccommodationRevenue(accommodationRevenue);
-        dto.setSalesRevenue(salesRevenue);
-        dto.setNumberOfTrades(numberOfTrades);
-        dto.setExpectedNumberOfTrades(clientTradeRecords.size());
-
-        dto.setTradeRecords(clientTradeRecords);
+        if (clientBaseInfo!=null){
+            dto.setName(clientBaseInfo.getName());
+            dto.setClientId(client_id);
+            dto.setSex(clientBaseInfo.getSex());
+            dto.setAccommodationRevenue(accommodationRevenue);
+            dto.setSalesRevenue(salesRevenue);
+            dto.setNumberOfTrades(numberOfTrades);
+            dto.setExpectedNumberOfTrades(clientTradeRecords.size());
+            dto.setTradeRecords(clientTradeRecords);
+        }else {
+            dto.setName("不存在的用户");
+        }
 
         modelMap.put("clientValuePageInfo",dto);
-        System.out.println("[ValueController]: dto: "+dto);
 
         return "value_calculating";
     }
@@ -93,7 +95,8 @@ public class ValueController {
         //消费收入率=某客户的消费收入额/所有客户的平均消费收入额
         dto.setConsumeIncomeRate((consumeIncome*clientSum)/totalClientConsumeIncome);
         //成功交易率=某客户的实际交易次数/某客户的预订次数
-        dto.setTradeSuccessRate((double)numberOfTrades/expectedNumberOfTrades);
+        double tradeSuccessRate=numberOfTrades==0?0:(double)numberOfTrades/expectedNumberOfTrades;
+        dto.setTradeSuccessRate(tradeSuccessRate);
         //客户价值=0.35x房费收入率+0.35x消费收入率+0.3成功交易率
         dto.setClientValue(0.35*dto.getAccommodationIncomeRate()
                 + 0.35*dto.getConsumeIncomeRate()
