@@ -15,9 +15,9 @@ public class ClientValueServiceImpl implements ClientValueService {
 
     @Override
     public void addOrUpdateClientValue(ClientValue clientValue) {
-        ClientValue query = clientValueMapper.selectOne(clientValue);
+        ClientValue query = clientValueMapper.selectByPrimaryKey(clientValue.getClientId());
         if (query==null){
-            clientValueMapper.insert(clientValue);
+            clientValueMapper.insertSelective(clientValue);
         }else {
             clientValueMapper.updateByPrimaryKey(clientValue);
         }

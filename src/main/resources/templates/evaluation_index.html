@@ -33,7 +33,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div style="text-align: center;margin:0 auto">
-                        <h1>客户住宿信息维护</h1>
+                        <h1>客户满意度评价指标维护</h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -53,7 +53,7 @@
                                 <i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;
                                 修改
                             </button>
-                            <button type="button" class="btn btn-danger" onclick="delete_client_accommodation()">
+                            <button type="button" class="btn btn-danger" onclick="delete_evaluation_index_info()">
                                 <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;
                                 删除
                             </button>
@@ -64,32 +64,27 @@
                             <table id="example1" class="table table-bordered dataTable dtr-inline">
                                 <thead>
                                 <tr>
-                                    <th hidden>#</th>
-                                    <th>客户档案号</th>
-                                    <th>客户姓名</th>
-                                    <th>房间</th>
-                                    <th>入住日期</th>
-                                    <th>入住时长(天)</th>
-                                    <th>交易状态</th>
+                                    <th hidden>ID</th>
+                                    <th>指标层级</th>
+                                    <th>指标名称</th>
+                                    <th>父级指标</th>
+                                    <th>占父级指标权重</th>
+                                    <th>指标英文字段</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                <div th:if="${clientAccommodationDTOs}!=null">
-                                    <tr th:each="info,infoStat: ${clientAccommodationDTOs}" onclick="choose_this_row()">
+                                <div th:if="${indices}!=null">
+                                    <tr th:each="info,infoStat: ${indices}" onclick="choose_this_row()">
                                         <td th:text="${info.id}" hidden></td>
-                                        <td th:text="${info.clientId}"></td>
-                                        <td th:text="${info.name}"></td>
-                                        <td th:text="${info.roomId}"></td>
-                                        <td th:text="${info.date}"></td>
-                                        <td th:text="${info.dayCount}"></td>
-                                        <td th:text="${info.state}?'已支付':'预订'"></td>
+                                        <td th:text="${info.categoryLevel}"></td>
+                                        <td th:text="${info.indexName}"></td>
+                                        <td th:text="${kvMap[info.parentIndex].indexName}" th:value="${info.parentIndex}"></td>
+                                        <td th:text="${info.weight}"></td>
+                                        <td th:text="${info.indexField}"></td>
                                     </tr>
                                 </div>
-
                                 </tbody>
-
-
                             </table>
                         </div>
                         <!-- /.card-body -->
@@ -127,40 +122,37 @@
                 <form role="form" id="client_base_info_form">
                     <div class="card-body">
                         <div class="form-group" hidden>
-                            <label for="id">ID</label>
+                            <label for="id">指标ID</label>
                             <input type="text" class="form-control" id="id" name="id">
                         </div>
                         <div class="form-group">
-                            <label for="clientId">客户档案号</label>
-                            <input type="text" class="form-control" id="clientId" name="clientId">
+                            <label for="categoryLevel">指标层级</label>
+                            <select class="form-control" id="categoryLevel" name="categoryLevel">
+                                <option value="1">一级指标</option>
+                                <option value="2">二级指标</option>
+                                <option value="3">三级指标</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="name">客户姓名</label>
-                            <input type="text" class="form-control" id="name" name="name">
+                            <label for="indexName">指标名称</label>
+                            <input type="text" class="form-control" id="indexName" name="indexName">
                         </div>
                         <div class="form-group">
-                            <label for="roomId">房间</label>
-<!--                            <input type="text" class="form-control" id="roomId" name="roomId">-->
-                            <select class="form-control" id="roomId" name="roomId">
-                                <div  th:each="info,infoStat: ${hotelRooms}">
-                                    <option th:text="${info.category}+'，房号:'+${info.id}+'，价格:'+${info.price}" th:value="${info.id}"></option>
+                            <label for="parentIndex">父级指标</label>
+                            <select class="form-control" id="parentIndex" name="parentIndex">
+                                <div th:each="info,infoStat:${indices}">
+                                    <option th:value="${info.id}" th:text="${info.indexName}"
+                                            th:if="${info.categoryLevel}<3">一级指标</option>
                                 </div>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="date">入住日期</label>
-                            <input type="text" class="form-control" id="date" name="date">
+                            <label for="weight">占父级指标权重</label>
+                            <input type="text" class="form-control" id="weight" name="weight">
                         </div>
                         <div class="form-group">
-                            <label for="dayCount">入住天数</label>
-                            <input type="text" class="form-control" id="dayCount" name="dayCount">
-                        </div>
-                        <div class="form-group">
-                            <label for="state">交易类型</label>
-                            <select class="form-control" id="state" name="state">
-                                <option value="0">预订</option>
-                                <option value="1">已支付</option>
-                            </select>
+                            <label for="indexField">指标英文字段</label>
+                            <input type="text" class="form-control" id="indexField" name="indexField">
                         </div>
 
                     </div>
@@ -198,7 +190,6 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script src="dist/js/pages/dashboard3.js"></script>
 <script>
     $(function () {
         $("#example1").DataTable({
@@ -243,14 +234,13 @@
             alert("请先选中一条客户基本信息记录");
             return;
         }
-        $("#name").parent().attr("style","");
+
         $("#id").val(ths[0].innerText);
-        $("#clientId").val(ths[1].innerText);
-        $("#name").val(ths[2].innerText);
-        $("#roomId").val(ths[3].innerText);
-        $("#date").val(ths[4].innerText);
-        $("#dayCount").val(ths[5].innerText);
-        $("#state").val(ths[6].innerText=='预订'?'0':'1');
+        $("#categoryLevel").val(ths[1].innerText);
+        $("#indexName").val(ths[2].innerText);
+        $("#parentIndex").val(ths[3].getAttribute("value"));
+        $("#weight").val(ths[4].innerText);
+        $("#indexField").val(ths[5].innerText);
         //模态框设置为修改模式
         $("#operation").val(1);
         //弹出模态框
@@ -261,15 +251,12 @@
      * 添加客户信息的模态框
      */
     function add_client_info(){
-        $("#id").parent().attr("style","display:none");
         $("#id").val("");
-        $("#clientId").val("");
-        $("#name").val("");
-        $("#name").parent().attr("style","display:none");
-        $("#roomId").val("");
-        $("#date").val("");
-        $("#dayCount").val("");
-        $("#state").val('0');
+        $("#categoryLevel").val(2);
+        $("#indexName").val("");
+        $("#parentIndex").val(1);
+        $("#weight").val("");
+        $("#indexField").val("");
         //模态框设置为添加模式
         $("#operation").val(0);
         //弹出模态框
@@ -283,9 +270,9 @@
         var operation=$("#operation").val();
         var post_url;
         if (operation==0){
-            post_url="/addClientAccommodation";
+            post_url="/addEvaluationIndex";
         }else {
-            post_url="/modifyClientAccommodation";
+            post_url="/modifyEvaluationIndex";
         }
         var post_info=$('#client_base_info_form').serialize();
 
@@ -299,24 +286,27 @@
                 alert("操作失败，请检查输入数据的格式");
             },
             success: function(data) {
-                alert("成功");
-                $("#close_model").click();
-                location.reload();
+                if (data){
+                    alert("成功");
+                    $("#close_model").click();
+                    location.reload();
+                }else {
+                    alert("输入信息有误，请检查后重试");
+                }
             }
         });
     }
 
-    function delete_client_accommodation() {
+    function delete_evaluation_index_info() {
         var ths = $("#example1>tbody").find("tr.focus").find("td"); //找出表格中被选中行的所有列
         if (ths.length===0){
             alert("请先选中一条客户基本信息记录");
             return;
         }
-        alert(ths[0].innerText);
 
         $.ajax({
             type: "POST",
-            url: "/deleteClientAccommodationInfo",
+            url: "/deleteEvaluationIndex",
             data: {"id": ths[0].innerText},
             async: true,
             error: function(request) {
@@ -328,8 +318,6 @@
                     alert("成功");
                     $("#close_model").click();
                     location.reload();
-                }else {
-                    alert("输入住宿信息有误，请检查房间或客户是否存在");
                 }
             }
         });

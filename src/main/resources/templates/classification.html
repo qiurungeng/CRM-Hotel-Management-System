@@ -61,88 +61,114 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <span>数据源</span>
-                                            </div>
-                                        </div>
-                                        <select class="form-control">
-                                            <option selected="selected">2019</option>
-                                            <option>2018</option>
-                                            <option>2017</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <span>K值选取</span>
-                                            </div>
-                                        </div>
-                                        <input class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary col-2 form-control">确定</button>
-                        </div>
-                        <div class="card-body">
+                        <form id="k-means-form">
                             <div class="row">
-                                <div class="col-2">
-                                    <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="checkboxPrimary1" checked>
-                                        <label for="checkboxPrimary1">
-                                            客户满意度
-                                        </label>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span>数据源</span>
+                                                </div>
+                                            </div>
+                                            <select class="form-control" name="data_set">
+                                                <option selected="selected">2019</option>
+                                                <option>2018</option>
+                                                <option>2017</option>
+                                            </select>
+                                        </div>
+
                                     </div>
                                 </div>
-                                <div class="col-2">
-                                    <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="checkboxPrimary2" checked>
-                                        <label for="checkboxPrimary2">
-                                            客户价值
-                                        </label>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span>K值选取</span>
+                                                </div>
+                                            </div>
+                                            <input class="form-control" name="K" type="number">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-2">
-                                    <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="checkboxPrimary3" checked>
-                                        <label for="checkboxPrimary3">
-                                            客户年收入
-                                        </label>
+                                <div class="btn btn-primary col-2 form-control" onclick="k_means_calculate()">确定</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="icheck-primary d-inline">
+                                            <input type="checkbox" id="checkboxPrimary1" checked value="satisfaction" class="attrs">
+                                            <label for="checkboxPrimary1">
+                                                客户满意度
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="checkboxPrimary4" checked>
-                                        <label for="checkboxPrimary4">
-                                            客户教育程度
-                                        </label>
+                                    <div class="col-2">
+                                        <div class="icheck-primary d-inline">
+                                            <input type="checkbox" id="checkboxPrimary2" checked value="client_value" class="attrs">
+                                            <label for="checkboxPrimary2">
+                                                客户价值
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="checkboxPrimary5" checked>
-                                        <label for="checkboxPrimary5">
-                                            客户年龄
-                                        </label>
+                                    <div class="col-2">
+                                        <div class="icheck-primary d-inline">
+                                            <input type="checkbox" id="checkboxPrimary3" checked value="income" class="attrs">
+                                            <label for="checkboxPrimary3">
+                                                客户年收入
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="icheck-primary d-inline">
+                                            <input type="checkbox" id="checkboxPrimary4" checked value="education" class="attrs">
+                                            <label for="checkboxPrimary4">
+                                                客户教育程度
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="icheck-primary d-inline">
+                                            <input type="checkbox" id="checkboxPrimary5" checked value="age" class="attrs">
+                                            <label for="checkboxPrimary5">
+                                                客户年龄
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-body">
-                            <label for="result">挖掘结果：</label>
-                            <textarea class="col-12" style="height: 300px" id="result"></textarea>
-                        </div>
-                    </div>
+                        </form>
 
+                        <div class="card-body">
+                            <label for="example1">挖掘结果：</label>
+                            <table id="example1" class="table table-bordered dataTable dtr-inline">
+                                <thead id="thead">
+                                </thead>
+                                <tbody id="tbody">
+                                </tbody>
+                            </table>
+                        </div>
+<!--                        <div class="card-body">-->
+<!--                            <label for="result">挖掘结果：</label>-->
+<!--                            <textarea class="col-12" style="height: 200px" id="result"></textarea>-->
+<!--                        </div>-->
+
+
+                        <div class="card-body">
+                            <dl>
+                                <dt>数值说明：</dt>
+                                <dd>客户满意度分为5个等级：很不满意、不满意、一般、很满意、满意，对应数值分别为：1、2、3、4、5</dd>
+                                <dd>客户受教育程度分为7个等级：小学、初中、高中、大专、本科、硕士、博士，对应数值分别为：1、2、3、4、5、6、7</dd>
+                                <dd>客户价值计算公式：客户价值 = 房费收入率 * 0.35 + 消费收入率 * 035 + 订单成交率 * 0.3</dd>
+                                <dd>客户年收入分为5个等级：低于3万，3-5万，5-10万，10-20万，20万以上，对应数值分别为：1、2、3、4、5</dd>
+                                <dd>客户年龄分为5个等级：20岁以下，20-30岁，30-40岁，40-50岁，50岁以上，对应数值分别为：1、2、3、4、5</dd>
+                            </dl>
+                        </div>
+                        <!-- /.card-body -->
+
+
+                    </div>
                 </div>
 
             </div><!-- /.container-fluid -->
@@ -173,7 +199,6 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script src="dist/js/pages/dashboard3.js"></script>
 <script type="text/javascript" src="js/my.js"></script>
 <!-- Bootstrap Switch -->
 <script src="plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
@@ -204,42 +229,72 @@
         });
     });
 
+    var attrMap={
+        "income":"客户年收入",
+        "client_value":"客户价值",
+        "satisfaction":"客户满意度",
+        "education":"客户受教育程度",
+        "age":"客户年龄",
+        "clusterSizes":"该簇的元素个数"
+    };
 
 
-    /**
-     * 提交用户评价表单
-     */
-    function collect_client_satisfaction() {
-        var formObject = {};
-        var formArray =$("#client_satisfaction_form").serializeArray();
+    function k_means_calculate() {
+        var formObject = {};	//JSON对象
+        var formArray =$("#k-means-form").serializeArray();
         $.each(formArray,function(i,item){
             formObject[item.name] = item.value;
         });
-
-
-        //提交表单
-        $.ajax({
-            type: "POST",
-            url: "/calculateClientSatisfaction",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(formObject),
-            dataType: 'json',
-            async: false,
-            error: function(request) {
-                alert("Connection error");
-            },
-            success: function(data) {
-                $("#JDHJ").text(data["environment_aware"]);
-                $("#JDFW").text(data["service_aware"]);
-                $("#JDSS").text(data["facility_aware"]);
-                $("#JDYG").text(data["staff_aware"]);
-                $("#XFTY").text(data["shopping_aware"]);
-                $("#ZTPJ").text(data["weighted_total_score"]);
-
-                alert("OK");
-                alert(data["environment_aware"]);
+        var attrs=$(".attrs");
+        var attrsObj=[];
+        $.each(attrs,function(i){
+            if (attrs[i].checked){
+                attrsObj.push(attrs[i].value);
             }
         });
+        formObject["attrs"]=attrsObj;
+
+        if (formObject["K"]<=1){
+            alert("请输入有意义的K值");
+        }else {
+            //提交表单
+            $.ajax({
+                type: "POST",
+                url: "/classify/k_means",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(formObject),
+                dataType: 'json',
+                async: false,
+                error: function(request) {
+                    alert("Connection error");
+                },
+                success: function(data) {
+                    var clusters=data["clusters"];
+                    var clusterSizes=data["clusterSizes"];
+
+                    $("#thead").html("");
+                    $("#tbody").html("");
+                    var head_row="<tr>";
+                    for(var i in clusters[0]){
+                        head_row+="<th>"+attrMap[i]+"</th>"
+                    }
+                    head_row+="<th>簇中元素个数</th>"
+                    head_row+="</tr>"
+                    var body_row="";
+                    for (var i = 0; i < clusters.length; i++) {
+                        body_row+="<tr>";
+                        for(var j in clusters[0]){
+                            body_row+="<td>"+clusters[i][j]+"</td>"
+                        }
+                        body_row+="<td>"+clusterSizes[i]+"</td>"
+                        body_row+="</tr>";
+                    }
+                    $("#thead").append(head_row);
+                    $("#tbody").append(body_row);
+
+                }
+            });
+        }
     }
 
 </script>

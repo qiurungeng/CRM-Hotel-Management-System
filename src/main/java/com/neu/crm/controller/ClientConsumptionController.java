@@ -63,31 +63,51 @@ public class ClientConsumptionController {
         return "client_consumption";
     }
 
+    /**
+     * 增
+     */
     @PostMapping("addClientConsumeInfo")
     @ResponseBody
-    public String addClientConsumeInfo(ClientConsumeDTO dto){
-        ClientConsumeInfo clientConsumeInfo=new ClientConsumeInfo();
-        BeanUtils.copyProperties(dto,clientConsumeInfo,"name");
-        clientConsumeService.addClientConsumeInfo(clientConsumeInfo);
-
-        return "成功";
+    public boolean addClientConsumeInfo(ClientConsumeDTO dto){
+        ClientBaseInfo client = clientBaseInfoService.getClientBaseInfoById(dto.getClientId());
+        if (client!=null){
+            ClientConsumeInfo clientConsumeInfo=new ClientConsumeInfo();
+            BeanUtils.copyProperties(dto,clientConsumeInfo,"name");
+            clientConsumeService.addClientConsumeInfo(clientConsumeInfo);
+            return true;
+        }
+        return false;
     }
 
+    /**
+     * 改
+     */
     @PostMapping("modifyClientConsumeInfo")
     @ResponseBody
-    public String modifyClientConsumeInfo(ClientConsumeDTO dto){
-        ClientConsumeInfo clientConsumeInfo=new ClientConsumeInfo();
-        BeanUtils.copyProperties(dto,clientConsumeInfo,"name");
-        clientConsumeService.modifyClientConsumeInfo(clientConsumeInfo);
-
-        return "成功";
+    public boolean modifyClientConsumeInfo(ClientConsumeDTO dto){
+        ClientBaseInfo client = clientBaseInfoService.getClientBaseInfoById(dto.getClientId());
+        if (client!=null) {
+            ClientConsumeInfo clientConsumeInfo = new ClientConsumeInfo();
+            BeanUtils.copyProperties(dto, clientConsumeInfo, "name");
+            clientConsumeService.modifyClientConsumeInfo(clientConsumeInfo);
+            return true;
+        }
+        return false;
     }
 
+    /**
+     * 根据客户消费记录的id删除对应的记录
+     * @param id ClientConsumeInfo: id
+     * @return 操作成功或失败
+     */
     @PostMapping("deleteClientConsumeInfo")
     @ResponseBody
-    public String deleteClientConsumeInfo(Integer clientId){
-        clientConsumeService.deleteClientConsumeInfoByClientId(clientId);
-        return "成功";
+    public boolean deleteClientConsumeInfo(Integer id){
+        if (id!=null){
+            clientConsumeService.deleteClientConsumeInfoById(id);
+            return true;
+        }
+        return false;
     }
 
 }

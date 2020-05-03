@@ -64,10 +64,10 @@
                             <table id="example1" class="table table-bordered dataTable dtr-inline">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th hidden>#</th>
                                     <th>客户档案号</th>
                                     <th>客户姓名</th>
-                                    <th>服务设施ID</th>
+                                    <th hidden>服务设施ID</th>
                                     <th>服务设施名称</th>
                                     <th>单价</th>
                                     <th>消费数量</th>
@@ -77,37 +77,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>20170001</td>
-                                    <td>1</td>
-                                    <td>张三(样例数据)</td>
-                                    <td>1</td>
-                                    <td>歌舞厅</td>
-                                    <td>200.00</td>
-                                    <td>2</td>
-                                    <td>2015-05-05</td>
-                                    <td>400.00</td>
-                                    <td>已支付</td>
-                                </tr>
-                                <tr>
-                                    <td>20170002</td>
-                                    <td>2</td>
-                                    <td>李四(样例数据)</td>
-                                    <td>1</td>
-                                    <td>歌舞厅</td>
-                                    <td>200.00</td>
-                                    <td>2</td>
-                                    <td>2015-05-05</td>
-                                    <td>400.00</td>
-                                    <td>已支付</td>
-                                </tr>
 
                                 <div th:if="${clientConsumeDTOs}!=null">
-                                    <tr th:each="info,infoStat: ${clientConsumeDTOs}">
-                                        <td th:text="${info.id}"></td>
+                                    <tr th:each="info,infoStat: ${clientConsumeDTOs}" onclick="choose_this_row()">
+                                        <td th:text="${info.id}" hidden></td>
                                         <td th:text="${info.clientId}"></td>
                                         <td th:text="${info.clientName}"></td>
-                                        <td th:text="${info.serviceId}"></td>
+                                        <td th:text="${info.serviceId}" hidden></td>
                                         <td th:text="${info.serviceName}"></td>
                                         <td th:text="${info.price}"></td>
                                         <td th:text="${info.count}"></td>
@@ -252,6 +228,13 @@
         });
     });
 
+    function choose_this_row() {
+        $("#example1>tbody>tr").on("click", function () {
+            $(this).parent().find("tr.focus").toggleClass("focus");//取消原先选中行
+            $(this).toggleClass("focus");//设定当前行为选中行
+        });
+    }
+
     /**
      * 模态框中显示待修改客户信息
      */
@@ -318,9 +301,14 @@
                 alert("操作失败，请检查输入数据格式");
             },
             success: function(data) {
-                alert("成功");
-                $("#close_model").click();
-                location.reload();
+                if (data){
+                    alert("成功");
+                    $("#close_model").click();
+                    location.reload();
+                }else {
+                    alert("操作失败，输入数据格式有误或不存在");
+                }
+
             }
         });
     }
@@ -334,7 +322,7 @@
         $.ajax({
             type: "POST",
             url: "/deleteClientConsumeInfo",
-            data: {"clientId": ths[0].innerText},
+            data: {"id": ths[0].innerText},
             async: true,
             error: function(request) {
                 alert("Connection error");
@@ -345,6 +333,8 @@
                     alert("成功");
                     $("#close_model").click();
                     location.reload();
+                }else {
+                    alert("操作失败，输入数据格式有误或不存在");
                 }
             }
         });

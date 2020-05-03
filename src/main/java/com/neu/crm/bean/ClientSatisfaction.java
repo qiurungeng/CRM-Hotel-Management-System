@@ -10,5 +10,5 @@ import javax.persistence.Id;
 public class ClientSatisfaction {
     private Integer clientId;
     private Integer evaluationId;
-    private Integer score;
+    private Double score;
 }

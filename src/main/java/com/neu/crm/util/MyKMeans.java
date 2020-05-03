@@ -12,12 +12,12 @@ public class MyKMeans {
 
     static Vector<Point> li=new Vector<>();
     static List<Vector<Point>> list=new ArrayList<Vector<Point>>(); //每次迭代保存结果，一个vector代表一个簇
-    private final static Integer K=2; //选K=2，也就是估算有两个簇。
+    private final static Integer K=4; //选K=2，也就是估算有两个簇。
     private final static Double converge=0.001; //当距离小于某个值的时候。就觉得聚类已经聚类了，不须要再迭代，这里的值选0.001
 
     //读取数据
     public static final void readF1() throws IOException {
-        String filePath= "D:\\Code_Learning\\crm\\src\\main\\resources\\static\\data2.txt";
+        String filePath= "D:\\Code_Learning\\crm\\src\\main\\resources\\data_set\\2019.txt";
         BufferedReader br = new BufferedReader(new InputStreamReader(
                 new FileInputStream(new File(filePath))));
         for (String line = br.readLine(); line != null; line = br.readLine()) {

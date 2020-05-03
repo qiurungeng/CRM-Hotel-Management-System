@@ -14,4 +14,6 @@ public interface ClientConsumeService {
     List<ClientConsumeInfo> getClientConsumeInfosByClientId(int clientId);
 
     void deleteClientConsumeInfoByClientId(Integer clientId);
+
+    void deleteClientConsumeInfoById(Integer id);
 }

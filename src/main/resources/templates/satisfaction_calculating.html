@@ -50,13 +50,29 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
+
+
                 <!-- 客户满意度评价录入 -->
-                <div class="card card-success">
-                    <div class="card-header">
-                        <h3 class="card-title">满意度调查信息录入</h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                        </div>
+                <div class="card">
+                    <div class="card-header  d-flex p-0">
+                        <h3 class="card-title p-3">满意度调查信息录入</h3>
+                        <ul class="nav nav-pills ml-auto p-2">
+                            <li class="nav-item">
+                                <a class="nav-link" th:class="${categoryLevel}==1?'nav-link active':'nav-link'"
+                                   data-toggle="tab" onclick="jump_to_page('/satisfactionCalculating?categoryLevel=1')">
+                                    一级评价指标</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:class="${categoryLevel}==2?'nav-link active':'nav-link'"
+                                   data-toggle="tab" onclick="jump_to_page('/satisfactionCalculating?categoryLevel=2')">
+                                    二级评价指标</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:class="${categoryLevel}==3?'nav-link active':'nav-link'"
+                                   data-toggle="tab" onclick="jump_to_page('/satisfactionCalculating?categoryLevel=3')">
+                                    三级评价指标</a>
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="card-body">
@@ -247,9 +263,8 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script src="dist/js/pages/dashboard3.js"></script>
 <script type="text/javascript" src="js/my.js"></script>
-<script>
+<script type="text/javascript" th:inline="javascript">
     $(function () {
         $("#example1").DataTable({
             "responsive": true,
@@ -276,18 +291,24 @@
         });
     });
 
-
-
     /**
      * 提交用户评价表单
      */
     function collect_client_satisfaction() {
         var formObject = {};
         var formArray =$("#client_satisfaction_form").serializeArray();
+        var check=true;
         $.each(formArray,function(i,item){
+            if (item.value===""){
+                alert("请将填写满意度调查信息表填写完整");
+                check=false;
+            }
             formObject[item.name] = item.value;
         });
-
+        formObject["categoryLevel"]=[[${categoryLevel}]];
+        if (!check){
+            return;
+        }
 
         //提交表单
         $.ajax({
@@ -306,12 +327,14 @@
                 $("#JDSS").text(data["facility_aware"]);
                 $("#JDYG").text(data["staff_aware"]);
                 $("#XFTY").text(data["shopping_aware"]);
-                $("#ZTPJ").text(data["weighted_total_score"]);
-
-                alert("OK");
-                alert(data["environment_aware"]);
+                $("#ZTPJ").text(data["total_aware"]);
+                alert("录入成功");
             }
         });
+    }
+
+    function jump_to_page(url) {
+        window.location.href=url;
     }
 
 </script>

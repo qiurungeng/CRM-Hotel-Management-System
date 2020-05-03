@@ -65,7 +65,7 @@ to get the desired effect
           <!-- form start -->
           <form role="form" id="client_base_info_form">
             <div class="card-body">
-              <div class="form-group">
+              <div class="form-group" hidden>
                 <label for="clientId">客户档案号</label>
                 <input type="text" class="form-control" id="clientId" name="clientId">
               </div>
@@ -195,6 +195,13 @@ to get the desired effect
       $(this).toggleClass("focus");//设定当前行为选中行
     });
   });
+
+  function choose_this_row() {
+    $("#example1>tbody>tr").on("click", function () {
+      $(this).parent().find("tr.focus").toggleClass("focus");//取消原先选中行
+      $(this).toggleClass("focus");//设定当前行为选中行
+    });
+  }
 
   /**
    * 模态框中显示待修改客户信息

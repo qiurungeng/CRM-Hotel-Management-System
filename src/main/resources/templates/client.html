@@ -81,7 +81,7 @@
                 <tbody>
 
                 <div th:if="${clientBaseInfos}!=null">
-                  <tr th:each="info,infoStat: ${clientBaseInfos}">
+                  <tr th:each="info,infoStat: ${clientBaseInfos}" onclick="choose_this_row()">
                     <td th:text="${info.clientId}"></td>
                     <td th:text="${info.name}"></td>
                     <td th:text="${info.sex}==true?'男':'女'"></td>
@@ -163,6 +163,13 @@
       $(this).toggleClass("focus");//设定当前行为选中行
     });
   });
+
+  function choose_this_row() {
+    $("#example1>tbody>tr").on("click", function () {
+      $(this).parent().find("tr.focus").toggleClass("focus");//取消原先选中行
+      $(this).toggleClass("focus");//设定当前行为选中行
+    });
+  }
 </script>
 </body>
 </html>

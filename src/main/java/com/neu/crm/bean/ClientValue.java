@@ -10,7 +10,6 @@ import javax.persistence.Id;
 public class ClientValue {
     @Id
     @Column(name = "client_id")
-    @GeneratedValue(generator = "JDBC")
     private Integer clientId;
     private Double accommodationIncomeRate;
     private Double consumeIncomeRate;
