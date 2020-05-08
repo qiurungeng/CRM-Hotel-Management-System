@@ -1,0 +1,36 @@
+%
+%  Arff file example
+%
+@relation labor-neg-data
+@attribute duration real
+@attribute wage-increase-first-year real
+@attribute wage-increase-second-year real
+@attribute wage-increase-third-year real
+@attribute cost-of-living-adjustment {none,tcf,tc}
+@attribute working-hours real
+@attribute pension {none,ret_allw,empl_contr}
+@attribute standby-pay real
+@attribute shift-differential real
+@attribute education-allowance {yes,no}
+
+@attribute statutory-holidays real
+@attribute vacation {below_average,average,generous}
+@attribute longterm-disability-assistance {yes,no}
+@attribute contribution-to-dental-plan {none,half,full}
+@attribute bereavement-assistance {yes,no}
+@attribute contribution-to-health-plan {none,half,full}
+@attribute class {bad,good,grate}
+@data
+1,5,?,?,?,40,?,?,2,?,11,average,?,?,yes,?,good
+2,4.5,5.8,?,?,35,ret_allw,?,?,yes,11,below_average,?,full,?,full,good
+?,?,?,?,?,38,empl_contr,?,5,?,11,generous,yes,half,yes,half,grate
+3,3.7,4,5,tc,?,?,?,?,yes,?,?,?,?,yes,?,good
+3,4.5,4.5,5,?,40,?,?,?,?,12,average,?,half,yes,half,good
+2,2,2.5,?,?,35,?,?,6,yes,12,average,?,?,?,?,good
+3,4,5,5,tc,?,empl_contr,?,?,?,12,generous,yes,none,yes,half,grate
+3,6.9,4.8,2.3,?,40,?,?,3,?,12,below_average,?,?,?,?,good
+2,3,7,?,?,38,?,12,25,yes,11,below_average,yes,half,yes,?,good
+1,5.7,?,?,none,40,empl_contr,?,4,?,11,generous,yes,full,?,?,grate
+3,3.5,4,4.6,none,36,?,?,3,?,13,generous,?,?,yes,full,good
+2,6.4,6.4,?,?,38,?,?,4,?,15,?,?,full,?,?,good
+2,3.5,4,?,none,40,?,?,2,no,10,below_average,no,half,?,half,bad

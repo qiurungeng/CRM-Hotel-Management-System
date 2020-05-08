@@ -9,4 +9,6 @@ public interface ClientValueService {
     void addOrUpdateClientValue(ClientValue clientValue);
 
     List<ClientValue> getClientValues();
+
+    ClientValue getClientValueById(int clientId);
 }

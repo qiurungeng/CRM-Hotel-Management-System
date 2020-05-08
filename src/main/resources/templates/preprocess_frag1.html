@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="card-body" th:fragment="preprocess_frag">
+    <hr/>
+    <dl>
+        <dt>数值说明：</dt>
+        <dd>客户满意度分为5个等级：很不满意、不满意、一般、很满意、满意，对应数值分别为：1、2、3、4、5</dd>
+        <dd>客户受教育程度分为7个等级：小学、初中、高中、大专、本科、硕士、博士，对应数值分别为：1、2、3、4、5、6、7</dd>
+        <dd>客户价值计算公式：客户价值 = 房费收入率 * 0.35 + 消费收入率 * 035 + 订单成交率 * 0.3</dd>
+        <dd>客户年收入分为5个等级：低于3万，3-5万，5-10万，10-20万，20万以上，对应数值分别为：1、2、3、4、5</dd>
+        <dd>客户年龄分为5个等级：20岁以下，20-30岁，30-40岁，40-50岁，50岁以上，对应数值分别为：1、2、3、4、5</dd>
+    </dl>
+    <hr/>
+    <div class="btn btn-success float-right" onclick="collect_client_satisfaction()">保存对于数据集的分类设置</div>
+</div>
+</html>

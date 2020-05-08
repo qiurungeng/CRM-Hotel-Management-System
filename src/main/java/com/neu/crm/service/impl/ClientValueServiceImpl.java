@@ -28,4 +28,11 @@ public class ClientValueServiceImpl implements ClientValueService {
     public List<ClientValue> getClientValues() {
         return clientValueMapper.selectAll();
     }
+
+    @Override
+    public ClientValue getClientValueById(int clientId) {
+        ClientValue clientValue = new ClientValue();
+        clientValue.setClientId(clientId);
+        return clientValueMapper.selectOne(clientValue);
+    }
 }

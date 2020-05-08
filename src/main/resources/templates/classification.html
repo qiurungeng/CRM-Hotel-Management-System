@@ -52,14 +52,15 @@
             <div class="container-fluid">
                 <div class="card card-default">
                     <div class="card-header">
-                        <h3 class="card-title">K-Means聚类</h3>
-
+                        <h3 class="card-title">K-Means聚类分析</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                             <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
                         </div>
                     </div>
-
+                    <div class="row card-body" style="height: 40px" >
+                        &nbsp;&nbsp;&nbsp;选取有代表性的样本，对样本训练集进行聚类分析，获取客户分类的性质，为建立决策树做准备
+                    </div>
                     <div class="card-body">
                         <form id="k-means-form">
                             <div class="row">
@@ -72,9 +73,9 @@
                                                 </div>
                                             </div>
                                             <select class="form-control" name="data_set">
-                                                <option selected="selected">2019</option>
-                                                <option>2018</option>
-                                                <option>2017</option>
+                                                <option selected="selected">2020</option>
+                                                <option>2019</option>
+                                                <option>所有年份数据</option>
                                             </select>
                                         </div>
 
@@ -139,23 +140,23 @@
                                 </div>
                             </div>
                         </form>
-
-                        <div class="card-body">
-                            <label for="example1">挖掘结果：</label>
-                            <table id="example1" class="table table-bordered dataTable dtr-inline">
-                                <thead id="thead">
-                                </thead>
-                                <tbody id="tbody">
-                                </tbody>
-                            </table>
+<!--                        <hr style="margin-top: 20px;margin-bottom: 40px"/>-->
+                    </div>
+                </div>
+                <div class="card card-default">
+                    <div class="card-header">
+                        <h3 class="card-title">挖掘结果与分类设置：</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
                         </div>
-<!--                        <div class="card-body">-->
-<!--                            <label for="result">挖掘结果：</label>-->
-<!--                            <textarea class="col-12" style="height: 200px" id="result"></textarea>-->
-<!--                        </div>-->
+                    </div>
+                    <div class="card-body">
+                        <div id="table_container" >
 
-
-                        <div class="card-body">
+                        </div>
+                        <div class="card-body" hidden id="page_tail">
+                            <hr/>
                             <dl>
                                 <dt>数值说明：</dt>
                                 <dd>客户满意度分为5个等级：很不满意、不满意、一般、很满意、满意，对应数值分别为：1、2、3、4、5</dd>
@@ -164,10 +165,11 @@
                                 <dd>客户年收入分为5个等级：低于3万，3-5万，5-10万，10-20万，20万以上，对应数值分别为：1、2、3、4、5</dd>
                                 <dd>客户年龄分为5个等级：20岁以下，20-30岁，30-40岁，40-50岁，50岁以上，对应数值分别为：1、2、3、4、5</dd>
                             </dl>
+                            <hr/>
+                            <div class="btn btn-success float-right" onclick="model_pops_up()">保存对于数据集的分类设置</div>
                         </div>
-                        <!-- /.card-body -->
-
-
+<!--                        <div id="frag">-->
+<!--                        </div>-->
                     </div>
                 </div>
 
@@ -180,6 +182,65 @@
 </div>
 <!-- ./wrapper -->
 
+<!-- Modal -->
+<div class="modal fade" id="clientModel" tabindex="-1" role="dialog" aria-labelledby="clientModelLabel">
+    <div class="modal-dialog" role="document" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="clientModelLabel">保存本次分类预处理的数据集</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" >
+                <!-- general form elements -->
+                <!-- form start -->
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="dataset_name">本次分类数据集名称</label>
+                            <input type="text" class="form-control" id="dataset_name">
+                        </div>
+                        <div class="form-group" style="height: 100px">
+                            <label for="bili">训练集与测试集比例</label>
+                            <div id="bili">
+                                <row>
+                                    <div class="col-sm-5 float-left" style="margin: 0;padding: 0">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span>训练集</span>
+                                                </div>
+                                            </div>
+                                            <input class="form-control" id="train_set_ratio" type="number">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 float-left" style="margin: 0;padding: 0; text-align: center"><strong>:</strong></div>
+                                    <div class="col-sm-5 float-right" style="margin: 0;padding: 0">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span>测试集</span>
+                                                </div>
+                                            </div>
+                                            <input class="form-control" id="test_set_ratio" type="number">
+                                        </div>
+                                    </div>
+                                </row>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="close_model">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="save_clustering_result()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--模态框弹出按钮，隐藏的按钮-->
+<button style="display: none" data-toggle="modal" data-target="#clientModel" id="client_model_pops_up"></button>
+<!--./添加/修改，对话框/模态框-->
 
 
 <!-- jQuery -->
@@ -192,8 +253,6 @@
 <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<!-- jQuery Knob -->
-<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
@@ -203,31 +262,13 @@
 <!-- Bootstrap Switch -->
 <script src="plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 <script>
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true,
-            "autoWidth": false,
-            "ordering": true,
-            "info": true
-        });
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
-
     //选中表格中的行
-    $(document).ready(function () {
+    function choose_row() {
         $("#example1>tbody>tr").on("click", function () {
             $(this).parent().find("tr.focus").toggleClass("focus");//取消原先选中行
             $(this).toggleClass("focus");//设定当前行为选中行
         });
-    });
+    }
 
     var attrMap={
         "income":"客户年收入",
@@ -271,30 +312,139 @@
                 success: function(data) {
                     var clusters=data["clusters"];
                     var clusterSizes=data["clusterSizes"];
+                    var table_container=$("#table_container");
 
-                    $("#thead").html("");
-                    $("#tbody").html("");
+                    /**
+                     * 清空并添加新的表格
+                     */
+                    table_container.html("");
+                    var new_table='' +
+                        '<table id="example1" class="table table-bordered dataTable dtr-inline">' +
+                        '<thead id="thead">' +
+                        '</thead>' +
+                        '<tbody id="tbody">' +
+                        '</tbody>' +
+                        '</table>';
+                    table_container.append(new_table);
+                    //表头
                     var head_row="<tr>";
                     for(var i in clusters[0]){
-                        head_row+="<th>"+attrMap[i]+"</th>"
+
+                        //<th>标签中value值为该列的属性名
+                        head_row+="<th value='"+i+"'>"+attrMap[i]+"</th>"
+
                     }
-                    head_row+="<th>簇中元素个数</th>"
-                    head_row+="</tr>"
+                    head_row+="<th value='elementNumberOfCluster'>簇中元素个数</th><th value='class'>定义所属分类</th>";
+                    head_row+="</tr>";
                     var body_row="";
+
+                    /**
+                     * clusters JSON example:
+                     * [{"client_value":0.6481171931315389,"satisfaction":5},
+                     * {"client_value":0.9532649258803234,"satisfaction":4},
+                     * {"client_value":1.4905052324129813,"satisfaction":3.8214285714285716},
+                     * {"client_value":0.5207313047052751,"satisfaction":3.806451612903226},
+                     * {"client_value":1.3090963362019885,"satisfaction":5},
+                     * {"client_value":0.8982746523436623,"satisfaction":2.3255813953488373}]
+                     */
                     for (var i = 0; i < clusters.length; i++) {
                         body_row+="<tr>";
-                        for(var j in clusters[0]){
-                            body_row+="<td>"+clusters[i][j]+"</td>"
+                        for(var j in clusters[0]){  // j为属性名
+
+                            body_row+="<td>"+clusters[i][j]+"</td>";
+
                         }
-                        body_row+="<td>"+clusterSizes[i]+"</td>"
+                        body_row+="<td>"+clusterSizes[i]+"</td><td contenteditable='true'></td>";
                         body_row+="</tr>";
                     }
                     $("#thead").append(head_row);
                     $("#tbody").append(body_row);
+                    $("#page_tail").removeAttr("hidden");
 
+                    $("#example1").DataTable({
+                        "responsive": true,
+                        "paging": false,
+                        "autoWidth": false,
+                        "info": false,
+                        "ordering": true,
+                        "searching": false
+                    });
+                    choose_row();
                 }
             });
         }
+    }
+
+    /**
+     * 保存用户对于KMeans聚类后数据集的分类设置
+     */
+    function save_clustering_result() {
+        var result={};
+        var attrList=[];
+        var clusters=[];
+        var dataset_name=$("#dataset_name").val();
+        var train_set_ratio=$("#train_set_ratio").val();
+        var test_set_ratio=$("#test_set_ratio").val();
+        if (dataset_name===''||train_set_ratio===''||test_set_ratio===''){
+            alert('请将分类设置填写完整');
+            return;
+        }
+
+        var ths=$("#thead>tr>th");
+        var trs=$("#tbody>tr");
+        var i,j;
+
+        for (i = 0; i < ths.length-2; i++) {
+            attrList.push(ths[i].getAttribute('value'));
+        }
+        attrList.push('class');
+
+        for (i = 0; i < trs.length; i++) {          //表格中的每一行
+            var tds = trs[i].getElementsByTagName('td');
+            var cluster={};
+            for( j=0 ; j < ths.length-2 ; j++ ){
+                cluster[attrList[j]] = tds[j].innerText;
+            }
+            if (tds[ths.length-1].innerText===''){
+                alert('请将分类定义信息填写完整');
+                return;
+            }
+            cluster['class'] = tds[ths.length-1].innerText;
+            clusters.push(cluster);
+        }
+
+        result['attrs']=attrList;
+        result['clusters']=clusters;
+        result['train_set_ratio']=train_set_ratio;
+        result['test_set_ratio']=test_set_ratio;
+        result['dataset_name']=dataset_name;
+
+        $.ajax({
+            type: "POST",
+            url: "/classify/c45",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(result),
+            dataType: 'json',
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                if (data){
+                    alert('保存成功');
+                    $("#close_model").click();
+                }else{
+                    alert('保存失败');
+                }
+            }
+        });
+    }
+
+    /**
+     * 弹出模态框
+     */
+    function model_pops_up() {
+        $("#client_model_pops_up").click();
     }
 
 </script>

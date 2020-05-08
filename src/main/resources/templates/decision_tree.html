@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>酒店管理系统</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!--  我的css-->
+    <link rel="stylesheet" href="css/my.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- 导航布局：左侧导航及上方状态栏-->
+    <div th:include="navigator::navigator"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <!--  中间主页面-->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>客户分类模型设置</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/static">首页</a></li>
+                            <li class="breadcrumb-item active">客户分类模型设置</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="card card-default">
+                    <div class="card-header">
+                        <h3 class="card-title">C4.5决策树</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="row card-body" style="height: 40px" >
+                        &nbsp;&nbsp;&nbsp;选择已经过KMeans聚类分析并标记好的训练集与测试集,建立决策树模型
+                    </div>
+                    <div class="card-body">
+                        <form id="k-means-form">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span>训练集与测试集选择</span>
+                                                </div>
+                                            </div>
+                                            <select class="form-control" name="data_set">
+                                                <div th:each="info,infoStat:${dataSets}">
+                                                    <option th:text="${info}"></option>
+                                                </div>
+<!--                                                <option selected="selected">2019</option>-->
+<!--                                                <option>2018</option>-->
+<!--                                                <option>2017</option>-->
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="btn btn-primary col-2 form-control" onclick="generate_decision_tree()">确定</div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row">
+                                    <label for="test_result_area">决策树模型测试结果:</label>
+                                    <textarea readonly style="height: 300px;width: 100%" id="test_result_area"></textarea>
+                                </div>
+                            </div>
+                        </form>
+
+                        <hr/>
+                        <div class="btn btn-success float-right" onclick="save_decision_tree()">保存并应用该决策树模型</div>
+                    </div>
+                </div>
+
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+
+    <div th:include="footer::footer"></div>
+</div>
+<!-- ./wrapper -->
+
+
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/my.js"></script>
+<!-- Bootstrap Switch -->
+<script src="plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<script>
+
+    var attrMap={
+        "income":"客户年收入",
+        "client_value":"客户价值",
+        "satisfaction":"客户满意度",
+        "education":"客户受教育程度",
+        "age":"客户年龄",
+        "clusterSizes":"该簇的元素个数"
+    };
+
+    function generate_decision_tree() {
+        var dataset = $("select option:selected").text();
+
+        //提交表单
+        $.ajax({
+            type: "POST",
+            url: '/testDecisionTreeModel',
+            data: {
+                'dataset': dataset
+            },
+            async: true,
+            error: function(request) {
+                alert("操作失败，请检查输入数据格式");
+            },
+            success: function(data) {
+                if (data){
+                    $("#test_result_area").text(data["modelTestResult"]);
+                }else {
+                    alert("操作失败");
+                }
+
+            }
+        });
+    }
+
+    function save_decision_tree() {
+
+        var dataset = $("select option:selected").text();
+
+        $.ajax({
+            type: "GET",
+            url: '/saveDecisionTree?dataset='+dataset,
+            async: true,
+            error: function(request) {
+                alert("操作失败，请检查输入数据格式");
+            },
+            success: function(data) {
+                if (data){
+                    alert("保存成功");
+                }else {
+                    alert("操作失败");
+                }
+
+            }
+        });
+    }
+
+
+</script>
+</body>
+
+</html>

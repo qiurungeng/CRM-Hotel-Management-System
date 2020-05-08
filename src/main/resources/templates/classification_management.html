@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>酒店管理系统</title>
+    <!-- Select2 -->
+    <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!--  我的css-->
+    <link rel="stylesheet" href="css/my.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- 导航布局：左侧导航及上方状态栏-->
+    <div th:include="navigator::navigator"></div>
+
+    <!-- Content Wrapper. Contains page content -->
+    <!--  中间主页面-->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>客户分类管理</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/">首页</a></li>
+                            <li class="breadcrumb-item active">客户分类管理</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary card-tabs">
+                        <div class="card-header p-0 pt-1">
+                            <ul class="nav nav-tabs" id="custom-tabs-five-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="custom-tabs-five-overlay-tab" data-toggle="pill" href="#custom-tabs-five-overlay" role="tab" aria-controls="custom-tabs-five-overlay" aria-selected="true">当前客户分类模型</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="custom-tabs-five-overlay-dark-tab" data-toggle="pill" href="#custom-tabs-five-overlay-dark" role="tab" aria-controls="custom-tabs-five-overlay-dark" aria-selected="false">客户所属分类查询</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="custom-tabs-five-tabContent">
+                                <div class="tab-pane fade show active" id="custom-tabs-five-overlay" role="tabpanel" aria-labelledby="custom-tabs-five-overlay-tab">
+                                    <div class="overlay-wrapper">
+                                        <div class="card-body">
+                                            <h4>当前分类模型：C4.5决策树</h4>
+                                            <div class="row" style="margin-top: 30px">
+                                                <div class="col-5 col-sm-3"><h5>分类名称:</h5></div>
+                                                <div class="col-7 col-sm-9"><h5>描述:</h5></div>
+                                            </div>
+                                            <div class="row" style="margin-top: 30px">
+                                                <div class="col-5 col-sm-3">
+                                                    <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist" aria-orientation="vertical">
+                                                        <a th:each="info,infoStat : ${classificationList}"
+                                                           th:class="${infoStat.first}?'nav-link active':'nav-link'"
+                                                           th:id="'vert-tabs-'+${info.name}+'-tab'"
+                                                           th:text="${info.name}"
+                                                           data-toggle="pill"
+                                                           th:href="'#vert-tabs-'+${info.name}"
+                                                           role="tab"
+                                                           th:aria-controls="'vert-tabs-'+${info.name}">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-7 col-sm-9">
+                                                    <div class="tab-content" id="vert-tabs-tabContent">
+                                                        <div th:each="info,infoStat:${classificationList}" th:class="${infoStat.first}?'tab-pane fade show active':'tab-pane fade'"
+                                                             th:id="'vert-tabs-'+${info.name}"
+                                                             role="tabpanel"
+                                                             th:aria-labelledby="'vert-tabs-'+${info.name}+'-tab'">
+                                                            <div class="card-body" style="padding-top: 0">
+                                                                <div class="card-body"  style="padding-top: 0">
+                                                                    <label th:for="${info.name}+'_classification_desc'">该分类客户特征描述:</label>
+                                                                    <textarea th:text="${info.description}" th:id="${info.name}+'_classification_desc'" style="height: 200px;width: 100%;" readonly></textarea>
+                                                                </div>
+                                                                <div class="card-body" >
+                                                                    <label th:for="${info.name}+'_classification_strategy'" >酒店应对策略:</label>
+                                                                    <textarea th:text="${info.strategy}" th:id="${info.name}+'_classification_strategy'" style="height: 200px;width: 100%;" readonly></textarea>
+                                                                </div>
+                                                                <button class="btn btn-success float-right" style="margin-right: 20px" th:value="${info.name}" onclick="save_classification(this);">保存</button>
+                                                                <button class="btn btn-primary float-right" style="margin-right: 20px" th:value="${info.name}" onclick="edit_classification(this);">编辑</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                 </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="custom-tabs-five-overlay-dark" role="tabpanel" aria-labelledby="custom-tabs-five-overlay-dark-tab">
+                                    <div class="overlay-wrapper">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label>客户选择:</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend float-left">
+                                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                                    </div>
+                                                    <select class="form-control input-group select2 float-left" style="width: 90%" name="clientId">
+                                                        <option value=""></option>
+                                                        <div th:each="info,infoStat:${clientInfos}" >
+                                                            <option  th:value="${info.clientId}" th:text="${info.name}+'(档案号:'+${info.clientId}+')'"></option>
+                                                        </div>
+                                                    </select>
+                                                    <!--                                    <input type="text" class="form-control" id="client_id" th:value="${clientValuePageInfo.clientId}"/>-->
+                                                    <button class="btn btn-primary input-group-append float-right" onclick="search_client_class_belong()">查询</button>
+
+                                                </div>
+                                                <!-- /.input group -->
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div id="client_info">
+                                            <row>
+                                                <div class="col-3 float-left">
+                                                    <div class="card card-default">
+                                                        <div class="card-body box-profile">
+                                                            <h3 class="profile-username text-center" id="client_name">客户名</h3>
+                                                            <p class="text-muted text-center">
+                                                                档案号：
+                                                                <span id="client_id">0</span>
+                                                            </p>
+
+                                                            <ul class="list-group list-group-unbordered mb-3">
+                                                                <li class="list-group-item">
+                                                                    <b>所属分类</b> <a class="float-right" id="classification_name">客户群1</a>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <b>性别</b> <a class="float-right" id="client_sex">男</a>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <b>房费收入</b> <a class="float-right" id="client_accommodationIncome">0</a>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <b>销售收入</b> <a class="float-right" id="client_consumeIncome">0</a>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <b>实际交易次数</b> <a class="float-right" id="client_numberOfTrades">0</a>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <b>预定次数</b> <a class="float-right" id="client_expectedNumberOfTrades">0</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-9 float-right">
+                                                    <div class="card card-default">
+                                                        <div class="card-body">
+                                                            <div class="alert alert-info alert-dismissible">
+                                                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                                                <h5><i class="icon fas fa-info"></i> 该类客户行为特征</h5>
+                                                                <div id="classification_desc">该客户群的客户由于出差公务或其他客观原因无法光顾酒店其他服务设施</div>
+
+                                                            </div>
+                                                            <div class="alert alert-warning alert-dismissible">
+                                                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                                                <h5><i class="icon fas fa-info"></i> 酒店应对策略</h5>
+                                                                <div id="classification_strategy">酒店可以加大对其广告宣传, 主动提供服务。比如通过电话 为其推荐餐厅的菜品, 询问需不需要订餐, 并随时提供送餐服务。</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </row>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <!-- 底部页脚-->
+    <div th:include="footer::footer"></div>
+</div>
+<!-- ./wrapper -->
+
+
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/my.js"></script>
+<!-- Select2 -->
+<script src="plugins/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        $("#client_info").hide();
+        $('.select2').select2();
+    });
+
+
+    /**
+     * 设置分类信息的可编辑状态
+     */
+    function edit_classification(edit_btn) {
+        var className=edit_btn.value;
+        var desc=$('#'+className+'_classification_desc');
+        var strategy=$('#'+className+'_classification_strategy');
+        if (desc.attr('readonly')!=null){
+            desc.removeAttr('readonly');
+            strategy.removeAttr('readonly');
+            $(edit_btn).text('取消编辑');
+        }else {
+            desc.attr('readonly','readonly');
+            strategy.attr('readonly','readonly');
+            $(edit_btn).text('编辑');
+        }
+    }
+
+    /**
+     * 保存对用户分类管理信息的修改
+     * @param save_btn 保存按钮
+     */
+    function save_classification(save_btn) {
+        var className=save_btn.value;
+        var desc=$('#'+className+'_classification_desc').val();
+        var strategy=$('#'+className+'_classification_strategy').val();
+        $.ajax({
+            type: "POST",
+            url: '/updateClassification',
+            data: {
+                'name': className,
+                'description': desc,
+                'strategy': strategy
+            },
+            async: true,
+            error: function(request) {
+                alert("操作失败，请检查输入数据的格式");
+            },
+            success: function(data) {
+                if (data) alert("成功");
+                else alert('操作失败');
+            }
+        });
+    }
+
+    /**
+     * 利用已有的决策树模型为用户分类
+     */
+    function search_client_class_belong() {
+        var clientId=$("select[name='clientId']")[0].value;
+        $.ajax({
+            type: "POST",
+            url: "/getClientClassification",
+            data:{
+                "clientId": clientId
+            },
+            async: true,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function (data) {
+                if (data){
+                    var result = data;
+                    var classification = result["classification"];
+                    var client = result["clientInfo"];
+                    var clientValue = result["clientValue"];
+                    $("#client_id").text(client["clientId"]);
+                    $("#client_name").text(client["name"]);
+                    $("#sex").text(client["sex"]);
+                    $("#client_accommodationIncome").text(clientValue["accommodationIncome"]);
+                    $("#client_consumeIncome").text(clientValue["consumeIncome"]);
+                    $("#client_numberOfTrades").text(clientValue["tradeTimes"]);
+                    $("#client_expectedNumberOfTrades").text(clientValue["orderTimes"]);
+                    $("#classification_name").text(classification["name"]);
+                    $("#classification_desc").text(classification["description"]);
+                    $("#classification_strategy").text(classification["strategy"]);
+                    $("#client_info").show();
+                }else {
+                    alert("用户满意度调查信息与用户价值计算结果未录入，或分类决策树模型未设置，操作失败！");
+                }
+
+            }
+        });
+
+    }
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+@relation kMeansResult
+
+@attribute client_value numeric
+@attribute income numeric
+@attribute satisfaction numeric
+
+@data
+0.65006,3.705357,4.232143
+0.720597,1.272727,3.704545
+1.327213,3.978022,3.89011
+0.782773,5,3.978261
+1.263859,4.205128,5
+0.878292,3.859375,2.09375

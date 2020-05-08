@@ -5,10 +5,7 @@ import com.neu.crm.bean.ClientValue;
 import com.neu.crm.bean.TradeRecord;
 import com.neu.crm.dto.ClientValueDTO;
 import com.neu.crm.dto.ClientValuePageInfoDTO;
-import com.neu.crm.service.ClientBaseInfoService;
-import com.neu.crm.service.ClientValueService;
-import com.neu.crm.service.StatisticsInfoService;
-import com.neu.crm.service.TradeRecordService;
+import com.neu.crm.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +31,8 @@ public class ValueController {
     StatisticsInfoService statisticsInfoService;
     @Autowired
     ClientValueService clientValueService;
+    @Autowired
+    ClassificationDataSourceService classificationDataSourceService;
 
     @RequestMapping("valueCalculating")
     public String clientValuePage(ModelMap modelMap){
@@ -42,6 +42,8 @@ public class ValueController {
         clientValuePageInfoDTO.setAccommodationRevenue(BigDecimal.ZERO);
         clientValuePageInfoDTO.setSalesRevenue(BigDecimal.ZERO);
         modelMap.put("clientValuePageInfo",clientValuePageInfoDTO);
+        modelMap.put("clientInfos",clientBaseInfoService.getClientBaseInfos());
+//        modelMap.put("clientValueDTO",new ClientValueDTO());
         return "value_calculating";
     }
 
@@ -80,7 +82,14 @@ public class ValueController {
         }
 
         modelMap.put("clientValuePageInfo",dto);
-
+        modelMap.put("clientInfos",clientBaseInfoService.getClientBaseInfos());
+//        //直接计算客户价值
+//        modelMap.put("clientValue",getClientValue(
+//                accommodationRevenue.doubleValue(),
+//                salesRevenue.doubleValue(),
+//                numberOfTrades,
+//                clientTradeRecords.size(),
+//                client_id));
         return "value_calculating";
     }
 
@@ -90,7 +99,7 @@ public class ValueController {
                                          Double consumeIncome,
                                          Integer numberOfTrades,
                                          Integer expectedNumberOfTrades,
-                                         Integer clientId){
+                                         Integer clientId) throws ParseException {
         ClientValueDTO dto=new ClientValueDTO();
 
         int clientSum = clientBaseInfoService.getClientsSum();
@@ -119,6 +128,15 @@ public class ValueController {
         clientValue.setTradeTimes(numberOfTrades);
         clientValueService.addOrUpdateClientValue(clientValue);
 
+        //更新用户状态
+        ClientBaseInfo client = clientBaseInfoService.getClientBaseInfoById(clientId);
+        client.setState(client.getState()|ClientBaseInfo.CLIENT_VALUE_HAS_BEEN_COLLECTED);
+        clientBaseInfoService.updateClientBaseInfo(client);
+        //若用户已完成满意度录入和价值计算，将其信息收入分类模型数据源中
+        if (client.getState()==ClientBaseInfo.CLIENT_VALUE_AND_SATISFACTION_HAVE_BEEN_COLLECTED){
+            classificationDataSourceService.createOrUpdateClassificationDataSource(client,clientValue);
+        }
+
         return dto;
     }
 
@@ -127,12 +145,15 @@ public class ValueController {
         List<ClientValueDTO> DTOs=new LinkedList<>();
 
         List<ClientValue> clientValues = clientValueService.getClientValues();
+
         for (ClientValue clientValue : clientValues) {
             ClientBaseInfo clientInfo = clientBaseInfoService.getClientBaseInfoById(clientValue.getClientId());
-            ClientValueDTO dto=new ClientValueDTO();
-            BeanUtils.copyProperties(clientInfo,dto);
-            BeanUtils.copyProperties(clientValue,dto,"clientId");
-            DTOs.add(dto);
+            if (clientInfo!=null){
+                ClientValueDTO dto=new ClientValueDTO();
+                BeanUtils.copyProperties(clientInfo,dto);
+                BeanUtils.copyProperties(clientValue,dto,"clientId");
+                DTOs.add(dto);
+            }
         }
 
         modelMap.put("clientValues",DTOs);

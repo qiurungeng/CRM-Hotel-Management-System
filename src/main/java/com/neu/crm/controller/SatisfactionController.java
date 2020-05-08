@@ -1,10 +1,11 @@
 package com.neu.crm.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.neu.crm.bean.Classification;
+import com.neu.crm.bean.ClientBaseInfo;
 import com.neu.crm.bean.ClientSatisfaction;
 import com.neu.crm.bean.EvaluationIndex;
-import com.neu.crm.service.ClientSatisfactionService;
-import com.neu.crm.service.EvaluationIndexService;
+import com.neu.crm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,14 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Controller
 public class SatisfactionController {
@@ -30,6 +28,13 @@ public class SatisfactionController {
 
     @Autowired
     EvaluationIndexService evaluationIndexService;
+
+    @Autowired
+    ClientBaseInfoService clientBaseInfoService;
+
+    @Autowired
+    ClassificationDataSourceService classificationDataSourceService;
+
 
     @RequestMapping("satisfactionCalculating")
     public String satisfactionCalculating(Integer categoryLevel,ModelMap modelMap){
@@ -45,12 +50,13 @@ public class SatisfactionController {
         modelMap.put("indicesName",indexNames);
         modelMap.put("indices",indices);
         modelMap.put("categoryLevel",categoryLevel);
+        modelMap.put("clientInfos",clientBaseInfoService.getClientBaseInfos());
         return "satisfaction_calculating";
     }
 
     @PostMapping("calculateClientSatisfaction")
     @ResponseBody
-    public String calculateClientSatisfaction(@RequestBody JSONObject json){
+    public String calculateClientSatisfaction(@RequestBody JSONObject json) throws ParseException {
         //各评价指标
         HashMap<Integer,EvaluationIndex> EIMap=new HashMap<>();
         //各评价指标对应的满意度得分
@@ -118,6 +124,15 @@ public class SatisfactionController {
         for (Integer evaluationIndexId : CSMap.keySet()) {
             insertOrUpdateClientSatisfaction(clientId,evaluationIndexId,CSMap.get(evaluationIndexId).doubleValue());
         }
+        //更新用户状态
+        ClientBaseInfo client = clientBaseInfoService.getClientBaseInfoById(clientId);
+        client.setState(client.getState()|ClientBaseInfo.CLIENT_SATISFACTION_HAS_BEEN_COLLECTED);
+        clientBaseInfoService.updateClientBaseInfo(client);
+        //若用户已完成满意度录入和价值计算，将其信息收入分类模型数据源中
+        if (client.getState()==ClientBaseInfo.CLIENT_VALUE_AND_SATISFACTION_HAVE_BEEN_COLLECTED){
+            classificationDataSourceService.createOrUpdateClassificationDataSource(client,CSMap.get(1).doubleValue());
+        }
+
 
         //返回计算结果到前端
         JSONObject result=new JSONObject();
