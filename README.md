@@ -64,11 +64,11 @@
 
 **客户可选用不同级别的评价指标录入对酒店的评价（以二级评价指标为例）：**
 
-![](C:\Users\Apollos\AppData\Roaming\Typora\typora-user-images\image-20201006225221807.png)
+![](https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20201006225221807.png)
 
 **录入成功后将计算出其对酒店各项评价结果：**
 
-![](C:\Users\Apollos\AppData\Roaming\Typora\typora-user-images\image-20201006225328749.png)
+![](https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20201006225328749.png)
 
 
 
